@@ -1,6 +1,9 @@
 package com.cloudcostdashboard.controller;
 
+import com.cloudcostdashboard.dto.CostForecastDTO;
+import com.cloudcostdashboard.dto.CostRecordDTO;
 import com.cloudcostdashboard.dto.CostSummary;
+import com.cloudcostdashboard.dto.MessageResponse;
 import com.cloudcostdashboard.entity.CloudResource;
 import com.cloudcostdashboard.entity.CostRecord;
 import com.cloudcostdashboard.entity.Recommendation;
@@ -8,6 +11,7 @@ import com.cloudcostdashboard.repository.CloudResourceRepository;
 import com.cloudcostdashboard.repository.CostRecordRepository;
 import com.cloudcostdashboard.repository.RecommendationRepository;
 import com.cloudcostdashboard.service.RecommendationEngineService;
+import com.cloudcostdashboard.service.MockDataGeneratorService;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/costs")
@@ -24,15 +29,29 @@ public class CostController {
     private final CloudResourceRepository resourceRepository;
     private final RecommendationRepository recommendationRepository;
     private final RecommendationEngineService recommendationEngineService;
+    private final MockDataGeneratorService mockDataGenerator;
 
     public CostController(CostRecordRepository costRecordRepository,
                           CloudResourceRepository resourceRepository,
                           RecommendationRepository recommendationRepository,
-                          RecommendationEngineService recommendationEngineService) {
+                          RecommendationEngineService recommendationEngineService,
+                          MockDataGeneratorService mockDataGenerator) {
         this.costRecordRepository = costRecordRepository;
         this.resourceRepository = resourceRepository;
         this.recommendationRepository = recommendationRepository;
         this.recommendationEngineService = recommendationEngineService;
+        this.mockDataGenerator = mockDataGenerator;
+    }
+
+    private CostRecordDTO mapToDTO(CostRecord record) {
+        if (record == null) return null;
+        return CostRecordDTO.builder()
+                .id(record.getId())
+                .provider(record.getProvider())
+                .serviceName(record.getServiceName())
+                .costAmount(record.getCostAmount())
+                .date(record.getDate())
+                .build();
     }
 
     @GetMapping("/summary")
@@ -52,8 +71,9 @@ public class CostController {
                 .sum();
 
         // Calculate Potential Monthly Savings (sum of estimatedSavingsPerMonth for unapplied recommendations)
-        List<Recommendation> recommendations = recommendationRepository.findByIsApplied(false);
+        List<Recommendation> recommendations = recommendationRepository.findAll();
         double potentialSavings = recommendations.stream()
+                .filter(rec -> !rec.isApplied())
                 .mapToDouble(Recommendation::getEstimatedSavingsPerMonth)
                 .sum();
 
@@ -66,7 +86,7 @@ public class CostController {
     }
 
     @GetMapping("/records")
-    public ResponseEntity<List<CostRecord>> getCostRecords(
+    public ResponseEntity<List<CostRecordDTO>> getCostRecords(
             @RequestParam(required = false) String provider,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
@@ -84,12 +104,22 @@ public class CostController {
             records = costRecordRepository.findAll();
         }
 
-        return ResponseEntity.ok(records);
+        List<CostRecordDTO> dtos = records.stream()
+                .map(this::mapToDTO)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(dtos);
     }
 
     @GetMapping("/forecast")
-    public ResponseEntity<List<Map<String, Object>>> getCostForecast() {
-        List<Map<String, Object>> forecast = recommendationEngineService.getCostTrendsAndForecast();
+    public ResponseEntity<List<CostForecastDTO>> getCostForecast() {
+        List<CostForecastDTO> forecast = recommendationEngineService.getCostTrendsAndForecast();
         return ResponseEntity.ok(forecast);
+    }
+ 
+    @PostMapping("/sync")
+    public ResponseEntity<?> syncData() {
+        mockDataGenerator.generateMockData(true);
+        return ResponseEntity.ok(new MessageResponse("Synchronization successful"));
     }
 }

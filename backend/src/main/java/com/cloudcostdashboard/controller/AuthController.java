@@ -2,7 +2,10 @@ package com.cloudcostdashboard.controller;
 
 import com.cloudcostdashboard.dto.AuthResponse;
 import com.cloudcostdashboard.dto.LoginRequest;
+import com.cloudcostdashboard.dto.MessageResponse;
 import com.cloudcostdashboard.dto.RegisterRequest;
+import com.cloudcostdashboard.service.MockDataGeneratorService;
+import org.springframework.context.annotation.Lazy;
 import com.cloudcostdashboard.entity.User;
 import com.cloudcostdashboard.repository.UserRepository;
 import com.cloudcostdashboard.security.JwtTokenProvider;
@@ -25,30 +28,33 @@ public class AuthController {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider tokenProvider;
+    private final MockDataGeneratorService mockDataGenerator;
 
     public AuthController(AuthenticationManager authenticationManager,
                           UserRepository userRepository,
                           PasswordEncoder passwordEncoder,
-                          JwtTokenProvider tokenProvider) {
+                          JwtTokenProvider tokenProvider,
+                          @Lazy MockDataGeneratorService mockDataGenerator) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.tokenProvider = tokenProvider;
+        this.mockDataGenerator = mockDataGenerator;
     }
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody RegisterRequest registerRequest) {
         if (registerRequest.getEmail() == null || registerRequest.getEmail().trim().isEmpty()) {
-            return ResponseEntity.badRequest().body(Map.of("message", "Email is required"));
+            return ResponseEntity.badRequest().body(new MessageResponse("Email is required"));
         }
         if (registerRequest.getPassword() == null || registerRequest.getPassword().trim().isEmpty()) {
-            return ResponseEntity.badRequest().body(Map.of("message", "Password is required"));
+            return ResponseEntity.badRequest().body(new MessageResponse("Password is required"));
         }
         if (registerRequest.getName() == null || registerRequest.getName().trim().isEmpty()) {
-            return ResponseEntity.badRequest().body(Map.of("message", "Name is required"));
+            return ResponseEntity.badRequest().body(new MessageResponse("Name is required"));
         }
         if (userRepository.existsByEmail(registerRequest.getEmail())) {
-            return ResponseEntity.badRequest().body(Map.of("message", "Email is already in use"));
+            return ResponseEntity.badRequest().body(new MessageResponse("Email is already in use"));
         }
 
         User user = User.builder()
@@ -59,16 +65,19 @@ public class AuthController {
 
         userRepository.save(user);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("message", "User registered successfully"));
+        // Reset and generate fresh mock data on new registration so they see active recommendations
+        mockDataGenerator.generateMockData(true);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(new MessageResponse("User registered successfully"));
     }
 
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
         if (loginRequest.getEmail() == null || loginRequest.getEmail().trim().isEmpty()) {
-            return ResponseEntity.badRequest().body(Map.of("message", "Email is required"));
+            return ResponseEntity.badRequest().body(new MessageResponse("Email is required"));
         }
         if (loginRequest.getPassword() == null || loginRequest.getPassword().trim().isEmpty()) {
-            return ResponseEntity.badRequest().body(Map.of("message", "Password is required"));
+            return ResponseEntity.badRequest().body(new MessageResponse("Password is required"));
         }
 
         Authentication authentication = authenticationManager.authenticate(
@@ -79,7 +88,10 @@ public class AuthController {
         String jwt = tokenProvider.generateToken(authentication);
 
         User user = userRepository.findByEmail(loginRequest.getEmail())
-                .orElseThrow(() -> new RuntimeException("User not found after successful authentication"));
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        // Reset and generate fresh mock data on every login session so they start with unapplied recommendations
+        mockDataGenerator.generateMockData(true);
 
         return ResponseEntity.ok(new AuthResponse(jwt, user.getName(), user.getEmail()));
     }

@@ -41,9 +41,9 @@ const Dashboard = ({
   return (
     <div className="flex flex-col gap-8">
       {showBanner && (
-        <div className="bg-[#ef4444] text-white px-6 py-4 rounded-xl flex justify-between items-center font-bold shadow-lg transition-all duration-300">
-          <div className="flex items-center gap-2 flex-grow">
-            <span>⚠ {criticalAlerts.length} critical resource{criticalAlerts.length > 1 ? 's' : ''} detected — wasting an estimated ${totalCriticalWaste.toFixed(2)}/month. </span>
+        <div className="bg-red-600 text-white px-6 py-4 rounded-xl flex justify-between items-center font-bold shadow-lg transition-all duration-300">
+          <div className="flex items-center gap-1.5 flex-grow">
+            <span>⚠ {criticalAlerts.length} critical resources detected — wasting an estimated ${totalCriticalWaste.toFixed(0)}/month.</span>
             <button
               onClick={() => navigate('/recommendations')}
               className="underline hover:text-red-100 transition-colors ml-1 cursor-pointer font-bold text-left bg-transparent border-none p-0 inline"

@@ -1,5 +1,6 @@
 package com.cloudcostdashboard.service;
 
+import com.cloudcostdashboard.dto.CostForecastDTO;
 import com.cloudcostdashboard.entity.CloudResource;
 import com.cloudcostdashboard.entity.CostRecord;
 import com.cloudcostdashboard.entity.Recommendation;
@@ -157,7 +158,7 @@ public class RecommendationEngineService {
     /**
      * Forecasts the next 30 days of daily cost using a least-squares linear trend model (y = mx + c)
      */
-    public List<Map<String, Object>> getCostTrendsAndForecast() {
+    public List<CostForecastDTO> getCostTrendsAndForecast() {
         LocalDate end = LocalDate.now();
         LocalDate start = end.minusDays(29);
         List<CostRecord> records = costRecordRepository.findByDateBetweenOrderByDateAsc(start, end);
@@ -169,7 +170,7 @@ public class RecommendationEngineService {
                         Collectors.summingDouble(CostRecord::getCostAmount)
                 ));
 
-        List<Map<String, Object>> results = new ArrayList<>();
+        List<CostForecastDTO> results = new ArrayList<>();
         int n = 30; // 30 days of historical data
         double[] x = new double[n];
         double[] y = new double[n];
@@ -179,11 +180,11 @@ public class RecommendationEngineService {
             x[i] = i;
             y[i] = dailyCosts.getOrDefault(temp, 0.0);
             
-            Map<String, Object> dataPoint = new HashMap<>();
-            dataPoint.put("date", temp.toString());
-            dataPoint.put("actualSpend", y[i]);
-            dataPoint.put("forecastSpend", null);
-            results.add(dataPoint);
+            results.add(CostForecastDTO.builder()
+                    .date(temp.toString())
+                    .actualSpend(y[i])
+                    .forecastSpend(null)
+                    .build());
             
             temp = temp.plusDays(1);
         }
@@ -208,11 +209,11 @@ public class RecommendationEngineService {
             double forecastValue = m * (n + i) + c;
             if (forecastValue < 0) forecastValue = 0; // Prevent negative spend
 
-            Map<String, Object> dataPoint = new HashMap<>();
-            dataPoint.put("date", forecastDate.toString());
-            dataPoint.put("actualSpend", null);
-            dataPoint.put("forecastSpend", Math.round(forecastValue * 100.0) / 100.0);
-            results.add(dataPoint);
+            results.add(CostForecastDTO.builder()
+                    .date(forecastDate.toString())
+                    .actualSpend(null)
+                    .forecastSpend(Math.round(forecastValue * 100.0) / 100.0)
+                    .build());
 
             forecastDate = forecastDate.plusDays(1);
         }

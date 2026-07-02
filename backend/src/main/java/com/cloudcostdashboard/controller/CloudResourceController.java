@@ -1,5 +1,6 @@
 package com.cloudcostdashboard.controller;
 
+import com.cloudcostdashboard.dto.CloudResourceDTO;
 import com.cloudcostdashboard.dto.ResourceAnalysisResponse;
 import com.cloudcostdashboard.dto.ResourceRequest;
 import com.cloudcostdashboard.entity.CloudResource;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/resources")
@@ -35,15 +37,33 @@ public class CloudResourceController {
         this.recommendationEngineService = recommendationEngineService;
     }
 
+    private CloudResourceDTO mapToDTO(CloudResource resource) {
+        if (resource == null) return null;
+        return CloudResourceDTO.builder()
+                .id(resource.getId())
+                .provider(resource.getProvider())
+                .resourceId(resource.getResourceId())
+                .name(resource.getName())
+                .resourceType(resource.getResourceType())
+                .region(resource.getRegion())
+                .status(resource.getStatus())
+                .costPerDay(resource.getCostPerDay())
+                .build();
+    }
+
     @GetMapping
-    public ResponseEntity<List<CloudResource>> getAllResources() {
+    public ResponseEntity<List<CloudResourceDTO>> getAllResources() {
         List<CloudResource> resources = resourceRepository.findAll();
-        return ResponseEntity.ok(resources);
+        List<CloudResourceDTO> dtos = resources.stream()
+                .map(this::mapToDTO)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(dtos);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CloudResource> getResourceById(@PathVariable Long id) {
+    public ResponseEntity<CloudResourceDTO> getResourceById(@PathVariable Long id) {
         return resourceRepository.findById(id)
+                .map(this::mapToDTO)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
@@ -111,7 +131,7 @@ public class CloudResourceController {
         }
 
         ResourceAnalysisResponse response = new ResourceAnalysisResponse(
-                updatedResource,
+                mapToDTO(updatedResource),
                 updatedResource.getStatus(),
                 estimatedSavings,
                 actionType,

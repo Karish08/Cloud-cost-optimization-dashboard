@@ -6,6 +6,8 @@ import com.cloudcostdashboard.entity.UsageMetric;
 import com.cloudcostdashboard.repository.CloudResourceRepository;
 import com.cloudcostdashboard.repository.CostRecordRepository;
 import com.cloudcostdashboard.repository.UsageMetricRepository;
+import com.cloudcostdashboard.repository.RecommendationRepository;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,19 +23,35 @@ public class MockDataGeneratorService {
     private final CloudResourceRepository resourceRepository;
     private final UsageMetricRepository metricRepository;
     private final CostRecordRepository costRecordRepository;
+    private final RecommendationRepository recommendationRepository;
+    private final RecommendationEngineService recommendationEngineService;
     private final Random random = new Random();
 
     public MockDataGeneratorService(CloudResourceRepository resourceRepository,
                                     UsageMetricRepository metricRepository,
-                                    CostRecordRepository costRecordRepository) {
+                                    CostRecordRepository costRecordRepository,
+                                    RecommendationRepository recommendationRepository,
+                                    @Lazy RecommendationEngineService recommendationEngineService) {
         this.resourceRepository = resourceRepository;
         this.metricRepository = metricRepository;
         this.costRecordRepository = costRecordRepository;
+        this.recommendationRepository = recommendationRepository;
+        this.recommendationEngineService = recommendationEngineService;
     }
 
     @Transactional
     public void generateMockData() {
-        if (resourceRepository.count() > 0) {
+        generateMockData(false);
+    }
+
+    @Transactional
+    public void generateMockData(boolean forceReset) {
+        if (forceReset) {
+            recommendationRepository.deleteAllInBatch();
+            metricRepository.deleteAllInBatch();
+            costRecordRepository.deleteAllInBatch();
+            resourceRepository.deleteAllInBatch();
+        } else if (resourceRepository.count() > 0) {
             return; // Data already exists
         }
 
@@ -73,6 +91,15 @@ public class MockDataGeneratorService {
             costRecords.add(new CostRecord(null, "GCP", "Cloud Storage", 6.0 + random.nextDouble() * 1.5 - 0.5, date));
         }
         costRecordRepository.saveAll(costRecords);
+ 
+        // Force flush to the database so the JPQL/SQL query in runAnalysis() can locate the metrics
+        resourceRepository.flush();
+        metricRepository.flush();
+        costRecordRepository.flush();
+        
+        // Run recommendation analysis immediately to generate recommendation records
+        recommendationEngineService.runAnalysis();
+        recommendationRepository.flush();
     }
 
     private List<CloudResource> createMockResources() {

@@ -22,7 +22,7 @@ const Login = () => {
     try {
       const response = await api.post('/auth/login', { email, password });
       setSuccessMsg('Authentication successful! Loading dashboard...');
-      login(response.data.token, response.data.user);
+      login(response.data.token, { name: response.data.name, email: response.data.email });
       
       setTimeout(() => {
         navigate('/');

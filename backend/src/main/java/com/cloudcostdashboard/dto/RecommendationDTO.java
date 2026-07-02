@@ -1,16 +1,20 @@
 package com.cloudcostdashboard.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ResourceAnalysisResponse {
+@Builder
+public class RecommendationDTO {
+    private Long id;
     private CloudResourceDTO resource;
-    private String status;
-    private double estimatedSavings;
-    private String recommendationAction;
+    private String actionType;
+    private double currentCostPerMonth;
+    private double estimatedSavingsPerMonth;
     private String reasoning;
+    private boolean isApplied;
 }

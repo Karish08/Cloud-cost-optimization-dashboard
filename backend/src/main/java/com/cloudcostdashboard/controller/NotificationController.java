@@ -1,5 +1,6 @@
 package com.cloudcostdashboard.controller;
 
+import com.cloudcostdashboard.dto.MessageResponse;
 import com.cloudcostdashboard.dto.Notification;
 import com.cloudcostdashboard.service.NotificationService;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +28,7 @@ public class NotificationController {
     public ResponseEntity<?> markAsRead(@PathVariable Long id) {
         boolean success = notificationService.markAsRead(id);
         if (success) {
-            return ResponseEntity.ok(Map.of("message", "Notification marked as read"));
+            return ResponseEntity.ok(new MessageResponse("Notification marked as read"));
         } else {
             return ResponseEntity.notFound().build();
         }
@@ -36,6 +37,6 @@ public class NotificationController {
     @PostMapping("/read-all")
     public ResponseEntity<?> markAllAsRead() {
         notificationService.markAllAsRead();
-        return ResponseEntity.ok(Map.of("message", "All notifications marked as read"));
+        return ResponseEntity.ok(new MessageResponse("All notifications marked as read"));
     }
 }

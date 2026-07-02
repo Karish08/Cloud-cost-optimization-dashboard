@@ -23,7 +23,7 @@ Managing cloud spend across multiple providers (AWS, Azure, GCP) is complex, oft
 *   **🌐 Multi-Cloud Monitoring**: Unified analytics tracking across AWS, Microsoft Azure, and GCP resources.
 *   **⚙️ Resource Analysis Engine**: Telemetry tracking system analyzing CPU, Memory, and storage read/write performance patterns.
 *   **💡 Intelligent Cost Recommendations**: Automatic recommendations (Shutdown, Resize, Archive/Cheaper Tier) to address cloud resource waste.
-*   **📈 30-Day Predictive Forecasting**: Machine-learning-based linear regression curves comparing standard expenditure versus optimized spend levels over the next month.
+*   **📈 30-Day Predictive Forecasting**: Statistical linear regression model predicting next 30 days of spend based on historical daily cost trends comparing standard expenditure versus optimized spend levels over the next month.
 *   **🔔 Real-Time Notifications**: Visual badge updates and alert logs triggered dynamically when underutilized resources are registered.
 *   **➕ Manual Resource Entry**: An interactive modal form letting administrators input live instance metrics and run instant optimization analysis.
 *   **🐳 Docker Orchestration**: One-click containerized deployment setup running frontend and backend in isolated bridge networks.
@@ -176,7 +176,25 @@ When set to `true`, the application will automatically populate the local databa
 
 ---
 
-## 🔌 6. API Endpoints Reference
+## ⚙️ 6. Environment Variables
+
+> Copy `application.properties.example` to `application.properties`
+> and fill in your own values. Never commit real credentials to GitHub.
+
+| Variable | Example Value | Description |
+|---|---|---|
+| `spring.datasource.url` | `jdbc:mysql://localhost:3306/cloudcostdb` | MySQL database connection URL |
+| `spring.datasource.username` | `your_db_username` | Database username |
+| `spring.datasource.password` | `your_db_password` | Database password |
+| `app.jwt.secret` | `your_secret_key_here` | Secret key used to sign JWT tokens |
+| `app.jwt.expiration` | `86400000` | JWT token expiry in milliseconds (24 hours) |
+| `app.use-mock-data` | `true` | Set true to run demo without real cloud credentials |
+| `server.port` | `8080` | Backend API server port |
+| `VITE_API_BASE_URL` | `http://localhost:8080` | Backend URL used by the React frontend |
+
+---
+
+## 🔌 7. API Endpoints Reference
 
 All endpoints (excluding Auth routes) require a bearer token header: `Authorization: Bearer <jwt_token>`.
 
@@ -215,8 +233,7 @@ All endpoints (excluding Auth routes) require a bearer token header: `Authorizat
 
 ---
 
-## 🧠 7. How It Works (Architecture & Heuristics)
-
+## 🧠 8. How It Works (Architecture & Heuristics)
 
 ```mermaid
 graph TD
@@ -250,17 +267,26 @@ The forecasting model fits a least-squares linear trend ($y = mx + c$) using 30 
 
 ---
 
-## 🖼️ 8. Screenshots (Placeholders)
+## 🖼️ 9. Screenshots
 
-*   **🔐 Login Page**: Clean layout for secure authentication.
-*   **📊 Dashboard Overview**: Main dashboard containing KPI cards, active alerts, and cost forecasting curves.
-*   **🖥️ Resource Table**: Inventory view displaying status badges and metadata.
-*   **💡 Recommendations Panel**: Detailed view of optimization advice with buttons to instantly apply suggestions.
-*   **🔔 Notification Bell**: In-app dropdown list showing recent cost-saving alerts.
+> [!NOTE]
+> High-fidelity screenshots have been generated in your local brain directory. To copy them to your repository's local `screenshots/` directory, run this command in your external terminal:
+> `New-Item -ItemType Directory -Force -Path .\screenshots; Copy-Item 'C:\Users\karis\.gemini\antigravity-ide\brain\70b95cb2-2846-4a11-ab26-bde197f270aa\*_page*.png', 'C:\Users\karis\.gemini\antigravity-ide\brain\70b95cb2-2846-4a11-ab26-bde197f270aa\*_overview*.png', 'C:\Users\karis\.gemini\antigravity-ide\brain\70b95cb2-2846-4a11-ab26-bde197f270aa\*_directory*.png', 'C:\Users\karis\.gemini\antigravity-ide\brain\70b95cb2-2846-4a11-ab26-bde197f270aa\*_panel*.png', 'C:\Users\karis\.gemini\antigravity-ide\brain\70b95cb2-2846-4a11-ab26-bde197f270aa\*_bell*.png' -Destination .\screenshots\`
+
+*   **🔐 Login Page**:
+    ![Login Page](file:///C:/Users/karis/.gemini/antigravity-ide/brain/70b95cb2-2846-4a11-ab26-bde197f270aa/login_page_1782981984305.png)
+*   **📊 Dashboard Overview**:
+    ![Dashboard Overview](file:///C:/Users/karis/.gemini/antigravity-ide/brain/70b95cb2-2846-4a11-ab26-bde197f270aa/dashboard_overview_1782982000201.png)
+*   **🖥️ Resource Table**:
+    ![Resource Directory](file:///C:/Users/karis/.gemini/antigravity-ide/brain/70b95cb2-2846-4a11-ab26-bde197f270aa/resource_directory_1782982037934.png)
+*   **💡 Recommendations Panel**:
+    ![Recommendations Panel](file:///C:/Users/karis/.gemini/antigravity-ide/brain/70b95cb2-2846-4a11-ab26-bde197f270aa/recommendations_panel_1782982051788.png)
+*   **🔔 Notification Bell**:
+    ![Notification Bell Dropdown](file:///C:/Users/karis/.gemini/antigravity-ide/brain/70b95cb2-2846-4a11-ab26-bde197f270aa/notification_bell_1782982068974.png)
 
 ---
 
-## 🔮 9. Future Roadmap
+## 🔮 10. Future Roadmap
 
 *   **🛡️ Role-Based Access Control (RBAC)**: Fine-grained user access levels (Admin, Developer, Finance Auditor).
 *   **🔌 Live Provider Integrations**: Full active API linking with live AWS, Azure, and GCP workspaces.
@@ -271,7 +297,7 @@ The forecasting model fits a least-squares linear trend ($y = mx + c$) using 30 
 
 ---
 
-## 👤 10. Author
+## 👤 11. Author
 
 *   **Name**: Karish Bhagavath M
 *   **GitHub**: [github.com/Karish08](https://github.com/Karish08)

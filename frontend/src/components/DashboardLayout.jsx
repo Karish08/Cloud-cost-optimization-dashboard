@@ -3,6 +3,7 @@ import { Outlet, useNavigate, useLocation, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Bell, AlertCircle, AlertTriangle, Info, CheckCircle2 } from 'lucide-react';
 import { useNotifications } from '../context/NotificationContext';
+import api from '../services/api';
 
 const DashboardLayout = ({ onRefresh, viewTitle, notification, showToast }) => {
   const { user, logout } = useAuth();
@@ -12,6 +13,18 @@ const DashboardLayout = ({ onRefresh, viewTitle, notification, showToast }) => {
   const { notifications, unreadCount, animateBell, markAsRead, markAllAsRead } = useNotifications();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
+
+  const [bellShake, setBellShake] = useState(false);
+  const prevUnreadCount = useRef(unreadCount);
+
+  useEffect(() => {
+    if (unreadCount > prevUnreadCount.current) {
+      setBellShake(true);
+      const timer = setTimeout(() => setBellShake(false), 1000);
+      return () => clearTimeout(timer);
+    }
+    prevUnreadCount.current = unreadCount;
+  }, [unreadCount]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -82,10 +95,11 @@ const DashboardLayout = ({ onRefresh, viewTitle, notification, showToast }) => {
     setSyncing(true);
     showToast("Synchronizing multicloud cost metrics and analyzing resources...", "info");
     try {
+      await api.post('/costs/sync');
       await onRefresh();
       showToast("Multi-cloud synchronization finished successfully.", "success");
     } catch (error) {
-      showToast("Failed to sync cloud costs: " + error.message, "danger");
+      showToast("Failed to sync cloud costs: " + (error.response?.data?.message || error.message), "danger");
     } finally {
       setSyncing(false);
     }
@@ -160,7 +174,7 @@ const DashboardLayout = ({ onRefresh, viewTitle, notification, showToast }) => {
               <button
                 onClick={() => setDropdownOpen(!dropdownOpen)}
                 className={`p-2.5 rounded-lg border border-borderColor bg-[rgba(255,255,255,0.02)] text-textPrimary hover:bg-[rgba(255,255,255,0.06)] hover:border-borderHover transition-all duration-300 relative flex items-center justify-center cursor-pointer ${
-                  animateBell ? 'animate-bell-shake' : ''
+                  bellShake ? 'animate-bell-shake' : ''
                 }`}
               >
                 <Bell size={18} />

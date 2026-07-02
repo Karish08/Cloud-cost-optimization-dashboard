@@ -26,3 +26,25 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #8e94b2;
 }
+
+@keyframes bellShake {
+  0%, 100% { transform: rotate(0); }
+  15% { transform: rotate(15deg); }
+  30% { transform: rotate(-15deg); }
+  45% { transform: rotate(10deg); }
+  60% { transform: rotate(-10deg); }
+  75% { transform: rotate(4deg); }
+  85% { transform: rotate(-4deg); }
+}
+
+.animate-bell-shake {
+  animation: bellShake 1s ease-in-out;
+  transform-origin: top center;
+}
+
+.highlight-row {
+  background-color: rgba(139, 92, 246, 0.15) !important;
+  box-shadow: inset 0 0 10px rgba(139, 92, 246, 0.3);
+  transition: all 0.5s ease-in-out;
+}
+
