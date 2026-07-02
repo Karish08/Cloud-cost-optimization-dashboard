@@ -176,20 +176,7 @@ When set to `true`, the application will automatically populate the local databa
 
 ---
 
-## ⚙️ 6. Environment Variables Reference
-
-| Variable / Property | Default Value | Location | Description |
-| :--- | :--- | :--- | :--- |
-| `spring.datasource.url` | `jdbc:mysql://localhost:3306/...` | `application.properties` | Connection url for your database (MySQL/H2) |
-| `spring.datasource.username` | `root` | `application.properties` | Database login username |
-| `spring.datasource.password` | `Karishm@08` | `application.properties` | Database login credentials password |
-| `app.jwt.secret` | `3cfa76f4e15647a7f45b53e7f45...` | `application.properties` | Secret signature key for JWT authentication |
-| `app.use-mock-data` | `true` | `application.properties` | Enables dynamic mock telemetry data seeding |
-| `app.cors.allowed-origins` | `http://localhost:5173,http://localhost:3000` | `application.properties` | Access control headers configurations |
-
----
-
-## 🔌 7. API Endpoints Reference
+## 🔌 6. API Endpoints Reference
 
 All endpoints (excluding Auth routes) require a bearer token header: `Authorization: Bearer <jwt_token>`.
 
@@ -228,7 +215,8 @@ All endpoints (excluding Auth routes) require a bearer token header: `Authorizat
 
 ---
 
-## 🧠 8. How It Works (Architecture & Heuristics)
+## 🧠 7. How It Works (Architecture & Heuristics)
+
 
 ```mermaid
 graph TD
@@ -262,7 +250,7 @@ The forecasting model fits a least-squares linear trend ($y = mx + c$) using 30 
 
 ---
 
-## 🖼️ 9. Screenshots (Placeholders)
+## 🖼️ 8. Screenshots (Placeholders)
 
 *   **🔐 Login Page**: Clean layout for secure authentication.
 *   **📊 Dashboard Overview**: Main dashboard containing KPI cards, active alerts, and cost forecasting curves.
@@ -272,7 +260,7 @@ The forecasting model fits a least-squares linear trend ($y = mx + c$) using 30 
 
 ---
 
-## 🔮 10. Future Roadmap
+## 🔮 9. Future Roadmap
 
 *   **🛡️ Role-Based Access Control (RBAC)**: Fine-grained user access levels (Admin, Developer, Finance Auditor).
 *   **🔌 Live Provider Integrations**: Full active API linking with live AWS, Azure, and GCP workspaces.
@@ -283,7 +271,7 @@ The forecasting model fits a least-squares linear trend ($y = mx + c$) using 30 
 
 ---
 
-## 👤 11. Author
+## 👤 10. Author
 
 *   **Name**: Karish Bhagavath M
 *   **GitHub**: [github.com/Karish08](https://github.com/Karish08)
