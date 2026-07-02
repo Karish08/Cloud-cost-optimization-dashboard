@@ -1,9 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import KpiCard from '../components/KpiCard';
 import SpendForecastChart from '../components/SpendForecastChart';
 import ResourceTable from '../components/ResourceTable';
 import RecommendationCard from '../components/RecommendationCard';
+import { useNotifications } from '../context/NotificationContext';
 
 const Dashboard = ({
   setViewTitle,
@@ -14,6 +15,8 @@ const Dashboard = ({
   onApplyRecommendation
 }) => {
   const navigate = useNavigate();
+  const { notifications } = useNotifications();
+  const [bannerDismissed, setBannerDismissed] = useState(false);
 
   useEffect(() => {
     setViewTitle('Cost Overview');
@@ -31,8 +34,31 @@ const Dashboard = ({
   // Active unapplied recommendations
   const activeRecs = recommendations.filter((r) => !r.isApplied);
 
+  const criticalAlerts = notifications.filter(n => n.type === 'CRITICAL');
+  const showBanner = criticalAlerts.length > 0 && !bannerDismissed;
+  const totalCriticalWaste = criticalAlerts.reduce((sum, item) => sum + item.estimatedSavings, 0);
+
   return (
     <div className="flex flex-col gap-8">
+      {showBanner && (
+        <div className="bg-[#ef4444] text-white px-6 py-4 rounded-xl flex justify-between items-center font-bold shadow-lg transition-all duration-300">
+          <div className="flex items-center gap-2 flex-grow">
+            <span>⚠ {criticalAlerts.length} critical resource{criticalAlerts.length > 1 ? 's' : ''} detected — wasting an estimated ${totalCriticalWaste.toFixed(2)}/month. </span>
+            <button
+              onClick={() => navigate('/recommendations')}
+              className="underline hover:text-red-100 transition-colors ml-1 cursor-pointer font-bold text-left bg-transparent border-none p-0 inline"
+            >
+              View Recommendations &rarr;
+            </button>
+          </div>
+          <button
+            onClick={() => setBannerDismissed(true)}
+            className="w-6 h-6 rounded-full flex items-center justify-center hover:bg-[rgba(255,255,255,0.2)] transition-colors cursor-pointer font-bold text-sm flex-shrink-0 bg-transparent border-none"
+          >
+            ✕
+          </button>
+        </div>
+      )}
       {/* KPI Section */}
       <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <KpiCard

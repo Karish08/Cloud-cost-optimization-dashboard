@@ -1,7 +1,33 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import StatusBadge from './StatusBadge';
 
 const ResourceTable = ({ resources, isPreview = false }) => {
+  const location = useLocation();
+
+  useEffect(() => {
+    if (!isPreview && location.state?.highlightResourceId && resources.length > 0) {
+      const rowId = `row-${location.state.highlightResourceId}`;
+      const element = document.getElementById(rowId);
+      if (element) {
+        // Delay slightly to allow layout calculations to finish
+        const scrollTimer = setTimeout(() => {
+          element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          element.classList.add('highlight-row');
+        }, 100);
+
+        // Remove highlight class after animation finishes
+        const fadeTimer = setTimeout(() => {
+          element.classList.remove('highlight-row');
+        }, 3100);
+        
+        return () => {
+          clearTimeout(scrollTimer);
+          clearTimeout(fadeTimer);
+        };
+      }
+    }
+  }, [location.state, resources, isPreview]);
   const truncate = (str, max) => {
     if (!str) return '';
     if (str.length <= max) return str;
@@ -45,7 +71,11 @@ const ResourceTable = ({ resources, isPreview = false }) => {
         </thead>
         <tbody className="divide-y divide-[rgba(255,255,255,0.03)]">
           {resources.map((res) => (
-            <tr key={res.id} className="transition-colors duration-200 hover:bg-[rgba(255,255,255,0.02)]">
+            <tr 
+              key={res.id} 
+              id={`row-${res.id}`}
+              className="transition-colors duration-200 hover:bg-[rgba(255,255,255,0.02)]"
+            >
               <td className="p-4 font-mono text-[13px] text-textSecondary">
                 <code>{isPreview ? truncate(res.resourceId, 16) : res.resourceId}</code>
               </td>

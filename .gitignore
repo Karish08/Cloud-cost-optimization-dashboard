@@ -1,36 +1,103 @@
-# Node / Frontend
+# ==========================================
+# Frontend / Node / React (Vite)
+# ==========================================
+node_modules/
 frontend/node_modules/
+dist/
 frontend/dist/
+build/
 frontend/build/
 frontend/.svelte-kit/
 frontend/.next/
 frontend/out/
-frontend/.env.local
-frontend/.env.development.local
-frontend/.env.test.local
-frontend/.env.production.local
+.eslintcache
+frontend/.eslintcache
+.stylelintcache
+
+# Package manager logs & lockfiles
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
 frontend/npm-debug.log*
 frontend/yarn-debug.log*
 frontend/yarn-error.log*
 frontend/pnpm-debug.log*
 
-# Java / Maven / Backend
+# ==========================================
+# Backend / Java / Maven / Spring Boot
+# ==========================================
+target/
 backend/target/
+*.jar
 backend/*.jar
+*.war
 backend/*.war
+*.ear
 backend/*.ear
 backend/db/
+dependency-reduced-pom.xml
+.spring-boot-devtools-launcher.status
 
+# Database files (H2, SQLite, etc.)
+*.db
+*.sqlite
+*.sqlite3
+*.mv.db
+*.trace.db
+
+# ==========================================
+# Environment Variables & Secrets (CRITICAL)
+# ==========================================
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.development
+.env.test
+.env.production
+*.env
+*.env.*
+frontend/.env
+frontend/.env.local
+frontend/.env.development.local
+frontend/.env.test.local
+frontend/.env.production.local
+frontend/.env.development
+frontend/.env.test
+frontend/.env.production
+
+# ==========================================
 # IDE / Editors
+# ==========================================
 .idea/
 *.iml
 .vscode/
+.settings/
+.classpath
+.project
+.factorypath
 *.sublime-project
 *.sublime-workspace
-.DS_Store
-Thumbs.db
 
+# ==========================================
+# OS / System Files
+# ==========================================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+ehthumbs.db
+
+# ==========================================
 # Logs & Temp files
+# ==========================================
 *.log
+logs/
+backend/logs/
 tmp/
 temp/
