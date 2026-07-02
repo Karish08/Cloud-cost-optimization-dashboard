@@ -269,20 +269,20 @@ The forecasting model fits a least-squares linear trend ($y = mx + c$) using 30 
 
 ## 🖼️ 9. Screenshots
 
-> [!NOTE]
-> High-fidelity screenshots have been generated in your local brain directory. To copy them to your repository's local `screenshots/` directory, run this command in your external terminal:
-> `New-Item -ItemType Directory -Force -Path .\screenshots; Copy-Item 'C:\Users\karis\.gemini\antigravity-ide\brain\70b95cb2-2846-4a11-ab26-bde197f270aa\*_page*.png', 'C:\Users\karis\.gemini\antigravity-ide\brain\70b95cb2-2846-4a11-ab26-bde197f270aa\*_overview*.png', 'C:\Users\karis\.gemini\antigravity-ide\brain\70b95cb2-2846-4a11-ab26-bde197f270aa\*_directory*.png', 'C:\Users\karis\.gemini\antigravity-ide\brain\70b95cb2-2846-4a11-ab26-bde197f270aa\*_panel*.png', 'C:\Users\karis\.gemini\antigravity-ide\brain\70b95cb2-2846-4a11-ab26-bde197f270aa\*_bell*.png' -Destination .\screenshots\`
+### 🔐 Login Page
+![Login Page](screenshots/login.png)
 
-*   **🔐 Login Page**:
-    ![Login Page](file:///C:/Users/karis/.gemini/antigravity-ide/brain/70b95cb2-2846-4a11-ab26-bde197f270aa/login_page_1782981984305.png)
-*   **📊 Dashboard Overview**:
-    ![Dashboard Overview](file:///C:/Users/karis/.gemini/antigravity-ide/brain/70b95cb2-2846-4a11-ab26-bde197f270aa/dashboard_overview_1782982000201.png)
-*   **🖥️ Resource Table**:
-    ![Resource Directory](file:///C:/Users/karis/.gemini/antigravity-ide/brain/70b95cb2-2846-4a11-ab26-bde197f270aa/resource_directory_1782982037934.png)
-*   **💡 Recommendations Panel**:
-    ![Recommendations Panel](file:///C:/Users/karis/.gemini/antigravity-ide/brain/70b95cb2-2846-4a11-ab26-bde197f270aa/recommendations_panel_1782982051788.png)
-*   **🔔 Notification Bell**:
-    ![Notification Bell Dropdown](file:///C:/Users/karis/.gemini/antigravity-ide/brain/70b95cb2-2846-4a11-ab26-bde197f270aa/notification_bell_1782982068974.png)
+### 📊 Dashboard Overview
+![Dashboard Overview](screenshots/dashboard.png)
+
+### 🖥️ Resource Table
+![Resource Table](screenshots/resources.png)
+
+### 💡 Recommendations Panel
+![Recommendations Panel](screenshots/recommendations.png)
+
+### 🔔 Notification Bell
+![Notification Bell](screenshots/notifications.png)
 
 ---
 
