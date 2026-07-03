@@ -5,6 +5,7 @@ import com.cloudcostdashboard.entity.CloudResource;
 import com.cloudcostdashboard.entity.CostRecord;
 import com.cloudcostdashboard.entity.Recommendation;
 import com.cloudcostdashboard.entity.UsageMetric;
+import com.cloudcostdashboard.entity.User;
 import com.cloudcostdashboard.repository.CloudResourceRepository;
 import com.cloudcostdashboard.repository.CostRecordRepository;
 import com.cloudcostdashboard.repository.RecommendationRepository;
@@ -158,10 +159,10 @@ public class RecommendationEngineService {
     /**
      * Forecasts the next 30 days of daily cost using a least-squares linear trend model (y = mx + c)
      */
-    public List<CostForecastDTO> getCostTrendsAndForecast() {
+    public List<CostForecastDTO> getCostTrendsAndForecast(User user) {
         LocalDate end = LocalDate.now();
         LocalDate start = end.minusDays(29);
-        List<CostRecord> records = costRecordRepository.findByDateBetweenOrderByDateAsc(start, end);
+        List<CostRecord> records = costRecordRepository.findByUserAndDateBetweenOrderByDateAsc(user, start, end);
 
         // Group historical costs by date
         Map<LocalDate, Double> dailyCosts = records.stream()

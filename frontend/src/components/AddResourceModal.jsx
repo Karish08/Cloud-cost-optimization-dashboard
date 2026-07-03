@@ -64,11 +64,11 @@ const AddResourceModal = ({ isOpen, onClose, onSubmit }) => {
                 value={provider}
                 onChange={(e) => setProvider(e.target.value)}
                 required
-                className="bg-[rgba(255,255,255,0.04)] border border-borderColor text-textPrimary px-4 py-3 rounded-lg outline-none cursor-pointer transition-all duration-300 focus:bg-[rgba(255,255,255,0.08)] focus:border-[#a78bfa]"
+                className="bg-[rgba(255,255,255,0.03)] border border-borderColor text-textPrimary px-4 py-3 rounded-lg outline-none cursor-pointer transition-all duration-300 focus:bg-[rgba(255,255,255,0.06)] focus:border-[#38bdf8] focus:shadow-[0_0_0_2px_rgba(56,189,248,0.15)]"
               >
-                <option value="AWS" className="bg-[#121426]">AWS</option>
-                <option value="AZURE" className="bg-[#121426]">Azure</option>
-                <option value="GCP" className="bg-[#121426]">GCP</option>
+                <option value="AWS" className="bg-[#0c0c0d]">AWS</option>
+                <option value="AZURE" className="bg-[#0c0c0d]">Azure</option>
+                <option value="GCP" className="bg-[#0c0c0d]">GCP</option>
               </select>
             </div>
             <div className="flex flex-col gap-2">
@@ -77,11 +77,11 @@ const AddResourceModal = ({ isOpen, onClose, onSubmit }) => {
                 value={resourceType}
                 onChange={(e) => setResourceType(e.target.value)}
                 required
-                className="bg-[rgba(255,255,255,0.04)] border border-borderColor text-textPrimary px-4 py-3 rounded-lg outline-none cursor-pointer transition-all duration-300 focus:bg-[rgba(255,255,255,0.08)] focus:border-[#a78bfa]"
+                className="bg-[rgba(255,255,255,0.03)] border border-borderColor text-textPrimary px-4 py-3 rounded-lg outline-none cursor-pointer transition-all duration-300 focus:bg-[rgba(255,255,255,0.06)] focus:border-[#38bdf8] focus:shadow-[0_0_0_2px_rgba(56,189,248,0.15)]"
               >
-                <option value="COMPUTE" className="bg-[#121426]">Compute (VM)</option>
-                <option value="DATABASE" className="bg-[#121426]">Database</option>
-                <option value="STORAGE" className="bg-[#121426]">Storage</option>
+                <option value="COMPUTE" className="bg-[#0c0c0d]">Compute (VM)</option>
+                <option value="DATABASE" className="bg-[#0c0c0d]">Database</option>
+                <option value="STORAGE" className="bg-[#0c0c0d]">Storage</option>
               </select>
             </div>
           </div>
@@ -95,7 +95,7 @@ const AddResourceModal = ({ isOpen, onClose, onSubmit }) => {
                 value={resourceName}
                 onChange={(e) => setResourceName(e.target.value)}
                 required
-                className="bg-[rgba(255,255,255,0.04)] border border-borderColor text-textPrimary px-4 py-3 rounded-lg outline-none transition-all duration-300 focus:bg-[rgba(255,255,255,0.08)] focus:border-[#a78bfa] text-sm"
+                className="bg-[rgba(255,255,255,0.03)] border border-borderColor text-textPrimary px-4 py-3 rounded-lg outline-none transition-all duration-300 focus:bg-[rgba(255,255,255,0.06)] focus:border-[#38bdf8] focus:shadow-[0_0_0_2px_rgba(56,189,248,0.15)] text-sm"
               />
             </div>
             <div className="flex flex-col gap-2">
@@ -106,7 +106,7 @@ const AddResourceModal = ({ isOpen, onClose, onSubmit }) => {
                 value={region}
                 onChange={(e) => setRegion(e.target.value)}
                 required
-                className="bg-[rgba(255,255,255,0.04)] border border-borderColor text-textPrimary px-4 py-3 rounded-lg outline-none transition-all duration-300 focus:bg-[rgba(255,255,255,0.08)] focus:border-[#a78bfa] text-sm"
+                className="bg-[rgba(255,255,255,0.03)] border border-borderColor text-textPrimary px-4 py-3 rounded-lg outline-none transition-all duration-300 focus:bg-[rgba(255,255,255,0.06)] focus:border-[#38bdf8] focus:shadow-[0_0_0_2px_rgba(56,189,248,0.15)] text-sm"
               />
             </div>
           </div>
@@ -122,7 +122,7 @@ const AddResourceModal = ({ isOpen, onClose, onSubmit }) => {
                 value={allocatedMemoryGB}
                 onChange={(e) => setAllocatedMemoryGB(e.target.value)}
                 required
-                className="bg-[rgba(255,255,255,0.04)] border border-borderColor text-textPrimary px-4 py-3 rounded-lg outline-none transition-all duration-300 focus:bg-[rgba(255,255,255,0.08)] focus:border-[#a78bfa] text-sm"
+                className="bg-[rgba(255,255,255,0.03)] border border-borderColor text-textPrimary px-4 py-3 rounded-lg outline-none transition-all duration-300 focus:bg-[rgba(255,255,255,0.06)] focus:border-[#38bdf8] focus:shadow-[0_0_0_2px_rgba(56,189,248,0.15)] text-sm"
               />
             </div>
             <div className="flex flex-col gap-2">
@@ -135,7 +135,7 @@ const AddResourceModal = ({ isOpen, onClose, onSubmit }) => {
                 value={actualUsedMemoryGB}
                 onChange={(e) => setActualUsedMemoryGB(e.target.value)}
                 required
-                className="bg-[rgba(255,255,255,0.04)] border border-borderColor text-textPrimary px-4 py-3 rounded-lg outline-none transition-all duration-300 focus:bg-[rgba(255,255,255,0.08)] focus:border-[#a78bfa] text-sm"
+                className="bg-[rgba(255,255,255,0.03)] border border-borderColor text-textPrimary px-4 py-3 rounded-lg outline-none transition-all duration-300 focus:bg-[rgba(255,255,255,0.06)] focus:border-[#38bdf8] focus:shadow-[0_0_0_2px_rgba(56,189,248,0.15)] text-sm"
               />
             </div>
           </div>
@@ -151,7 +151,7 @@ const AddResourceModal = ({ isOpen, onClose, onSubmit }) => {
                 value={allocatedCpuPercent}
                 onChange={(e) => setAllocatedCpuPercent(e.target.value)}
                 required
-                className="bg-[rgba(255,255,255,0.04)] border border-borderColor text-textPrimary px-4 py-3 rounded-lg outline-none transition-all duration-300 focus:bg-[rgba(255,255,255,0.08)] focus:border-[#a78bfa] text-sm"
+                className="bg-[rgba(255,255,255,0.03)] border border-borderColor text-textPrimary px-4 py-3 rounded-lg outline-none transition-all duration-300 focus:bg-[rgba(255,255,255,0.06)] focus:border-[#38bdf8] focus:shadow-[0_0_0_2px_rgba(56,189,248,0.15)] text-sm"
               />
             </div>
             <div className="flex flex-col gap-2">
@@ -164,7 +164,7 @@ const AddResourceModal = ({ isOpen, onClose, onSubmit }) => {
                 value={actualCpuPercent}
                 onChange={(e) => setActualCpuPercent(e.target.value)}
                 required
-                className="bg-[rgba(255,255,255,0.04)] border border-borderColor text-textPrimary px-4 py-3 rounded-lg outline-none transition-all duration-300 focus:bg-[rgba(255,255,255,0.08)] focus:border-[#a78bfa] text-sm"
+                className="bg-[rgba(255,255,255,0.03)] border border-borderColor text-textPrimary px-4 py-3 rounded-lg outline-none transition-all duration-300 focus:bg-[rgba(255,255,255,0.06)] focus:border-[#38bdf8] focus:shadow-[0_0_0_2px_rgba(56,189,248,0.15)] text-sm"
               />
             </div>
           </div>
@@ -179,7 +179,7 @@ const AddResourceModal = ({ isOpen, onClose, onSubmit }) => {
               value={costPerDay}
               onChange={(e) => setCostPerDay(e.target.value)}
               required
-              className="bg-[rgba(255,255,255,0.04)] border border-borderColor text-textPrimary px-4 py-3 rounded-lg outline-none transition-all duration-300 focus:bg-[rgba(255,255,255,0.08)] focus:border-[#a78bfa] text-sm"
+              className="bg-[rgba(255,255,255,0.03)] border border-borderColor text-textPrimary px-4 py-3 rounded-lg outline-none transition-all duration-300 focus:bg-[rgba(255,255,255,0.06)] focus:border-[#38bdf8] focus:shadow-[0_0_0_2px_rgba(56,189,248,0.15)] text-sm"
             />
           </div>
 
@@ -195,7 +195,7 @@ const AddResourceModal = ({ isOpen, onClose, onSubmit }) => {
             <button
               type="submit"
               disabled={submitting}
-              className="bg-grad-primary text-white font-semibold px-6 py-2.5 rounded-lg cursor-pointer hover:-translate-y-0.5 hover:shadow-[0_4px_15px_rgba(124,58,237,0.4)] active:translate-y-0 transition-all duration-300 disabled:opacity-50 text-sm"
+              className="bg-grad-primary text-white font-semibold px-6 py-2.5 rounded-lg cursor-pointer hover:-translate-y-0.5 hover:shadow-[0_4px_15px_rgba(56,189,248,0.4)] active:translate-y-0 transition-all duration-300 disabled:opacity-50 text-sm"
             >
               {submitting ? 'Analyzing...' : 'Analyze & Save'}
             </button>

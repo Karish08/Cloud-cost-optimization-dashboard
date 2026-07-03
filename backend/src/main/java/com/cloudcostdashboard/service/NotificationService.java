@@ -2,6 +2,7 @@ package com.cloudcostdashboard.service;
 
 import com.cloudcostdashboard.dto.Notification;
 import com.cloudcostdashboard.entity.CloudResource;
+import com.cloudcostdashboard.entity.User;
 import com.cloudcostdashboard.repository.CloudResourceRepository;
 import org.springframework.stereotype.Service;
 
@@ -36,8 +37,8 @@ public class NotificationService {
         public void setRead(boolean read) { isRead = read; }
     }
 
-    public List<Notification> getNotifications() {
-        List<CloudResource> resources = resourceRepository.findAll();
+    public List<Notification> getNotifications(User user) {
+        List<CloudResource> resources = resourceRepository.findByUser(user);
         List<Notification> notifications = new ArrayList<>();
         Set<Long> activeUnhealthyIds = new HashSet<>();
 
@@ -118,9 +119,13 @@ public class NotificationService {
         return false;
     }
 
-    public void markAllAsRead() {
-        for (NotificationState state : stateMap.values()) {
-            state.setRead(true);
+    public void markAllAsRead(User user) {
+        List<CloudResource> resources = resourceRepository.findByUser(user);
+        for (CloudResource res : resources) {
+            NotificationState state = stateMap.get(res.getId());
+            if (state != null) {
+                state.setRead(true);
+            }
         }
     }
 }

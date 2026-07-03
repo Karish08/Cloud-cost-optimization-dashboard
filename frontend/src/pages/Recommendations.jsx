@@ -9,11 +9,11 @@ const Recommendations = ({ setViewTitle, recommendations, onApplyRecommendation 
   const activeRecs = recommendations.filter((r) => !r.isApplied);
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6 animate-fade-in-up">
       {activeRecs.length === 0 ? (
-        <div className="bg-bgCard border border-borderColor rounded-2xl p-12 text-center shadow-main backdrop-blur-md">
+        <div className="premium-card p-12 text-center">
           <p className="text-textSecondary text-base">
-            All systems optimized! No active waste detected.
+            All systems optimized. No active waste detected.
           </p>
         </div>
       ) : (

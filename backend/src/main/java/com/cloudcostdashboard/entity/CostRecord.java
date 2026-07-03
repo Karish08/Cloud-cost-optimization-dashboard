@@ -26,4 +26,8 @@ public class CostRecord {
 
     @Column(nullable = false)
     private LocalDate date;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 }

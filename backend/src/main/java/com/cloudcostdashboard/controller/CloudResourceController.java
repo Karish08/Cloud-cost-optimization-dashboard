@@ -6,11 +6,16 @@ import com.cloudcostdashboard.dto.ResourceRequest;
 import com.cloudcostdashboard.entity.CloudResource;
 import com.cloudcostdashboard.entity.UsageMetric;
 import com.cloudcostdashboard.entity.Recommendation;
+import com.cloudcostdashboard.entity.User;
 import com.cloudcostdashboard.repository.CloudResourceRepository;
 import com.cloudcostdashboard.repository.UsageMetricRepository;
 import com.cloudcostdashboard.repository.RecommendationRepository;
+import com.cloudcostdashboard.repository.UserRepository;
 import com.cloudcostdashboard.service.RecommendationEngineService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -26,15 +31,27 @@ public class CloudResourceController {
     private final UsageMetricRepository usageMetricRepository;
     private final RecommendationRepository recommendationRepository;
     private final RecommendationEngineService recommendationEngineService;
+    private final UserRepository userRepository;
 
     public CloudResourceController(CloudResourceRepository resourceRepository,
                                    UsageMetricRepository usageMetricRepository,
                                    RecommendationRepository recommendationRepository,
-                                   RecommendationEngineService recommendationEngineService) {
+                                   RecommendationEngineService recommendationEngineService,
+                                   UserRepository userRepository) {
         this.resourceRepository = resourceRepository;
         this.usageMetricRepository = usageMetricRepository;
         this.recommendationRepository = recommendationRepository;
         this.recommendationEngineService = recommendationEngineService;
+        this.userRepository = userRepository;
+    }
+
+    private User getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new org.springframework.security.authentication.BadCredentialsException("User not authenticated");
+        }
+        return userRepository.findByEmail(authentication.getName())
+                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + authentication.getName()));
     }
 
     private CloudResourceDTO mapToDTO(CloudResource resource) {
@@ -53,7 +70,7 @@ public class CloudResourceController {
 
     @GetMapping
     public ResponseEntity<List<CloudResourceDTO>> getAllResources() {
-        List<CloudResource> resources = resourceRepository.findAll();
+        List<CloudResource> resources = resourceRepository.findByUser(getCurrentUser());
         List<CloudResourceDTO> dtos = resources.stream()
                 .map(this::mapToDTO)
                 .collect(Collectors.toList());
@@ -62,7 +79,9 @@ public class CloudResourceController {
 
     @GetMapping("/{id}")
     public ResponseEntity<CloudResourceDTO> getResourceById(@PathVariable Long id) {
+        User user = getCurrentUser();
         return resourceRepository.findById(id)
+                .filter(res -> res.getUser() != null && res.getUser().getId().equals(user.getId()))
                 .map(this::mapToDTO)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -89,6 +108,7 @@ public class CloudResourceController {
                 .region(request.getRegion())
                 .status("HEALTHY")
                 .costPerDay(request.getCostPerDay())
+                .user(getCurrentUser())
                 .build();
         resource = resourceRepository.save(resource);
 

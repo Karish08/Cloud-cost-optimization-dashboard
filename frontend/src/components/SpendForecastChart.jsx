@@ -19,7 +19,7 @@ const CustomTooltip = ({ active, payload }) => {
     const isActual = data.actualSpend !== null;
     const value = isActual ? data.actualSpend : data.forecastSpend;
     const labelType = isActual ? 'Actual Cost' : 'Predicted Cost';
-    const color = isActual ? '#60a5fa' : '#c084fc';
+    const color = isActual ? '#38bdf8' : '#ec4899';
     
     const formattedDate = new Date(data.date).toLocaleDateString('en-US', {
       weekday: 'short',
@@ -29,7 +29,7 @@ const CustomTooltip = ({ active, payload }) => {
     });
 
     return (
-      <div className="bg-[#111224] border border-[#8b5cf6] rounded-lg p-3 shadow-[0_4px_12px_rgba(0,0,0,0.5)] text-xs pointer-events-none">
+      <div className="bg-[#0c0c0d] border border-[#38bdf8] rounded-lg p-3 shadow-[0_4px_12px_rgba(0,0,0,0.5)] text-xs pointer-events-none backdrop-blur-md">
         <div className="text-textSecondary mb-0.5">{formattedDate}</div>
         <div className="font-bold text-sm" style={{ color }}>
           {labelType}: ${value.toFixed(2)}
@@ -71,12 +71,12 @@ const SpendForecastChart = ({ data }) => {
         >
           <defs>
             <linearGradient id="grad-actual-area" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#3b82f6" stopOpacity={0.4} />
-              <stop offset="100%" stopColor="#3b82f6" stopOpacity={0.0} />
+              <stop offset="0%" stopColor="#38bdf8" stopOpacity={0.4} />
+              <stop offset="100%" stopColor="#38bdf8" stopOpacity={0.0} />
             </linearGradient>
             <linearGradient id="grad-forecast-area" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#8b5cf6" stopOpacity={0.3} />
-              <stop offset="100%" stopColor="#8b5cf6" stopOpacity={0.0} />
+              <stop offset="0%" stopColor="#ec4899" stopOpacity={0.3} />
+              <stop offset="100%" stopColor="#ec4899" stopOpacity={0.0} />
             </linearGradient>
           </defs>
 
@@ -109,25 +109,25 @@ const SpendForecastChart = ({ data }) => {
           <Area
             type="monotone"
             dataKey="actualSpend"
-            stroke="#3b82f6"
+            stroke="#38bdf8"
             strokeWidth={3}
             fill="url(#grad-actual-area)"
             connectNulls={false}
             dot={false}
-            activeDot={{ r: 6, stroke: '#3b82f6', strokeWidth: 3, fill: '#080914' }}
+            activeDot={{ r: 6, stroke: '#38bdf8', strokeWidth: 3, fill: '#050506' }}
           />
 
           {/* Area for Forecast Spend */}
           <Area
             type="monotone"
             dataKey="forecastSpend"
-            stroke="#8b5cf6"
+            stroke="#ec4899"
             strokeWidth={3}
             strokeDasharray="4 4"
             fill="url(#grad-forecast-area)"
             connectNulls={false}
             dot={false}
-            activeDot={{ r: 6, stroke: '#8b5cf6', strokeWidth: 3, fill: '#080914' }}
+            activeDot={{ r: 6, stroke: '#ec4899', strokeWidth: 3, fill: '#050506' }}
           />
         </AreaChart>
       </ResponsiveContainer>

@@ -3,10 +3,12 @@ package com.cloudcostdashboard.service;
 import com.cloudcostdashboard.entity.CloudResource;
 import com.cloudcostdashboard.entity.CostRecord;
 import com.cloudcostdashboard.entity.UsageMetric;
+import com.cloudcostdashboard.entity.User;
 import com.cloudcostdashboard.repository.CloudResourceRepository;
 import com.cloudcostdashboard.repository.CostRecordRepository;
 import com.cloudcostdashboard.repository.UsageMetricRepository;
 import com.cloudcostdashboard.repository.RecommendationRepository;
+import com.cloudcostdashboard.repository.UserRepository;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,18 +27,21 @@ public class MockDataGeneratorService {
     private final CostRecordRepository costRecordRepository;
     private final RecommendationRepository recommendationRepository;
     private final RecommendationEngineService recommendationEngineService;
+    private final UserRepository userRepository;
     private final Random random = new Random();
 
     public MockDataGeneratorService(CloudResourceRepository resourceRepository,
                                     UsageMetricRepository metricRepository,
                                     CostRecordRepository costRecordRepository,
                                     RecommendationRepository recommendationRepository,
-                                    @Lazy RecommendationEngineService recommendationEngineService) {
+                                    @Lazy RecommendationEngineService recommendationEngineService,
+                                    UserRepository userRepository) {
         this.resourceRepository = resourceRepository;
         this.metricRepository = metricRepository;
         this.costRecordRepository = costRecordRepository;
         this.recommendationRepository = recommendationRepository;
         this.recommendationEngineService = recommendationEngineService;
+        this.userRepository = userRepository;
     }
 
     @Transactional
@@ -46,16 +51,31 @@ public class MockDataGeneratorService {
 
     @Transactional
     public void generateMockData(boolean forceReset) {
+        List<User> users = userRepository.findAll();
+        for (User user : users) {
+            generateMockData(user, forceReset);
+        }
+    }
+
+    @Transactional
+    public void generateMockData(User user, boolean forceReset) {
+        if (user == null) {
+            return;
+        }
         if (forceReset) {
-            recommendationRepository.deleteAllInBatch();
-            metricRepository.deleteAllInBatch();
-            costRecordRepository.deleteAllInBatch();
-            resourceRepository.deleteAllInBatch();
-        } else if (resourceRepository.count() > 0) {
-            return; // Data already exists
+            recommendationRepository.deleteByResourceUser(user);
+            metricRepository.deleteByResourceUser(user);
+            costRecordRepository.deleteByUser(user);
+            resourceRepository.deleteByUser(user);
+        } else if (resourceRepository.countByUser(user) > 0) {
+            return; // Data already exists for this user
         }
 
         List<CloudResource> resources = createMockResources();
+        for (CloudResource res : resources) {
+            res.setUser(user);
+            res.setResourceId(res.getResourceId() + "-" + user.getId());
+        }
         resourceRepository.saveAll(resources);
 
         // Generate 30 days of metrics for each resource
@@ -76,19 +96,19 @@ public class MockDataGeneratorService {
             LocalDate date = today.minusDays(i);
             
             // AWS Costs
-            costRecords.add(new CostRecord(null, "AWS", "EC2", 40.0 + random.nextDouble() * 10 - 2, date));
-            costRecords.add(new CostRecord(null, "AWS", "RDS", 25.0 + random.nextDouble() * 5 - 1, date));
-            costRecords.add(new CostRecord(null, "AWS", "S3", 10.0 + random.nextDouble() * 2 - 0.5, date));
+            costRecords.add(new CostRecord(null, "AWS", "EC2", 40.0 + random.nextDouble() * 10 - 2, date, user));
+            costRecords.add(new CostRecord(null, "AWS", "RDS", 25.0 + random.nextDouble() * 5 - 1, date, user));
+            costRecords.add(new CostRecord(null, "AWS", "S3", 10.0 + random.nextDouble() * 2 - 0.5, date, user));
 
             // Azure Costs
-            costRecords.add(new CostRecord(null, "AZURE", "Virtual Machines", 35.0 + random.nextDouble() * 8 - 2, date));
-            costRecords.add(new CostRecord(null, "AZURE", "SQL Database", 20.0 + random.nextDouble() * 4 - 1, date));
-            costRecords.add(new CostRecord(null, "AZURE", "Blob Storage", 8.0 + random.nextDouble() * 2 - 0.5, date));
+            costRecords.add(new CostRecord(null, "AZURE", "Virtual Machines", 35.0 + random.nextDouble() * 8 - 2, date, user));
+            costRecords.add(new CostRecord(null, "AZURE", "SQL Database", 20.0 + random.nextDouble() * 4 - 1, date, user));
+            costRecords.add(new CostRecord(null, "AZURE", "Blob Storage", 8.0 + random.nextDouble() * 2 - 0.5, date, user));
 
             // GCP Costs
-            costRecords.add(new CostRecord(null, "GCP", "Compute Engine", 30.0 + random.nextDouble() * 6 - 2, date));
-            costRecords.add(new CostRecord(null, "GCP", "Cloud SQL", 18.0 + random.nextDouble() * 3 - 1, date));
-            costRecords.add(new CostRecord(null, "GCP", "Cloud Storage", 6.0 + random.nextDouble() * 1.5 - 0.5, date));
+            costRecords.add(new CostRecord(null, "GCP", "Compute Engine", 30.0 + random.nextDouble() * 6 - 2, date, user));
+            costRecords.add(new CostRecord(null, "GCP", "Cloud SQL", 18.0 + random.nextDouble() * 3 - 1, date, user));
+            costRecords.add(new CostRecord(null, "GCP", "Cloud Storage", 6.0 + random.nextDouble() * 1.5 - 0.5, date, user));
         }
         costRecordRepository.saveAll(costRecords);
  

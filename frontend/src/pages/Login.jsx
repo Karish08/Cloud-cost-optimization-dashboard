@@ -35,10 +35,14 @@ const Login = () => {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen p-5">
-      <div className="bg-bgCard backdrop-blur-3xl border border-borderColor shadow-main rounded-[20px] w-full max-w-[440px] p-10 transition-all duration-300 hover:border-[rgba(255,255,255,0.12)] hover:shadow-[0_12px_40px_0_rgba(0,0,0,0.5)]">
+    <div className="flex justify-center items-center min-h-screen p-5 relative overflow-hidden bg-bgDark">
+      {/* Ambient drifting lights */}
+      <div className="absolute top-[-100px] left-[-50px] w-[350px] h-[350px] rounded-full bg-[rgba(56,189,248,0.06)] filter blur-[100px] pointer-events-none z-0 animate-float-slow-1"></div>
+      <div className="absolute bottom-[-100px] right-[-50px] w-[350px] h-[350px] rounded-full bg-[rgba(236,72,153,0.05)] filter blur-[100px] pointer-events-none z-0 animate-float-slow-2"></div>
+
+      <div className="bg-bgCard backdrop-blur-md border border-borderColor shadow-premium-3d rounded-[20px] w-full max-w-[440px] p-10 transition-all duration-300 hover:border-borderHover hover:shadow-glow-cyan relative z-10 animate-fade-in-up">
         <div className="text-center mb-8">
-          <div className="bg-grad-primary w-14 h-14 rounded-[14px] inline-flex items-center justify-center shadow-[0_4px_20px_rgba(124,58,237,0.4)] mb-4">
+          <div className="bg-grad-primary w-14 h-14 rounded-[14px] inline-flex items-center justify-center shadow-[0_4px_20px_rgba(56, 189, 248, 0.4)] mb-4">
             <span className="text-3xl">☁️</span>
           </div>
           <h2 className="text-2xl font-bold text-textPrimary">CloudCost.io</h2>
@@ -57,7 +61,7 @@ const Login = () => {
               placeholder="name@company.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="bg-[rgba(255,255,255,0.04)] border border-borderColor text-textPrimary px-4 py-3 rounded-lg outline-none transition-all duration-300 focus:bg-[rgba(255,255,255,0.08)] focus:border-[#a78bfa] focus:shadow-[0_0_0_3px_rgba(139,92,246,0.2)] font-sans text-sm"
+              className="bg-[rgba(255,255,255,0.03)] border border-borderColor text-textPrimary px-4 py-3 rounded-lg outline-none transition-all duration-300 focus:bg-[rgba(255,255,255,0.06)] focus:border-[#38bdf8] focus:shadow-[0_0_0_3px_rgba(56, 189, 248, 0.2)] font-sans text-sm"
             />
           </div>
           
@@ -72,21 +76,21 @@ const Login = () => {
               placeholder="••••••••"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="bg-[rgba(255,255,255,0.04)] border border-borderColor text-textPrimary px-4 py-3 rounded-lg outline-none transition-all duration-300 focus:bg-[rgba(255,255,255,0.08)] focus:border-[#a78bfa] focus:shadow-[0_0_0_3px_rgba(139,92,246,0.2)] font-sans text-sm"
+              className="bg-[rgba(255,255,255,0.03)] border border-borderColor text-textPrimary px-4 py-3 rounded-lg outline-none transition-all duration-300 focus:bg-[rgba(255,255,255,0.06)] focus:border-[#38bdf8] focus:shadow-[0_0_0_3px_rgba(56, 189, 248, 0.2)] font-sans text-sm"
             />
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="bg-grad-primary text-white font-semibold py-3 px-6 rounded-lg cursor-pointer transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_4px_15px_rgba(124,58,237,0.4)] active:translate-y-0 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+            className="bg-grad-primary text-white font-semibold py-3 px-6 rounded-lg cursor-pointer transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_4px_15px_rgba(56, 189, 248, 0.4)] active:translate-y-0 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
           >
             {loading ? 'Signing In...' : 'Sign In'}
           </button>
 
           <p className="text-sm text-textSecondary text-center mt-2">
             Don't have an account?{' '}
-            <Link to="/signup" className="text-[#a78bfa] cursor-pointer font-semibold transition-all duration-300 hover:text-[#c084fc] hover:underline">
+            <Link to="/signup" className="text-[#38bdf8] cursor-pointer font-semibold transition-all duration-300 hover:text-[#ec4899] hover:underline">
               Create an account
             </Link>
           </p>

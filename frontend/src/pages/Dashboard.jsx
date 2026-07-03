@@ -39,7 +39,7 @@ const Dashboard = ({
   const totalCriticalWaste = criticalAlerts.reduce((sum, item) => sum + item.estimatedSavings, 0);
 
   return (
-    <div className="flex flex-col gap-8">
+    <div className="flex flex-col gap-8 animate-fade-in-up">
       {showBanner && (
         <div className="bg-red-600 text-white px-6 py-4 rounded-xl flex justify-between items-center font-bold shadow-lg transition-all duration-300">
           <div className="flex items-center gap-1.5 flex-grow">
@@ -66,16 +66,16 @@ const Dashboard = ({
           title="Monthly Run Rate"
           value={formatCurrency(costSummary?.monthlyRunRate)}
           subtitle="Projected monthly spend"
-          glowColor="violet"
-          iconBgColor="violet"
+          glowColor="blue"
+          iconBgColor="blue"
         />
         <KpiCard
           icon="📅"
           title="Spent (Last 30 Days)"
           value={formatCurrency(costSummary?.totalSpent30Days)}
           subtitle="Sum of actual billing cycles"
-          glowColor="blue"
-          iconBgColor="blue"
+          glowColor="pink"
+          iconBgColor="pink"
         />
         <KpiCard
           icon="🌱"
@@ -96,10 +96,10 @@ const Dashboard = ({
             <h2 className="text-[17px] font-semibold text-textPrimary">30-Day Cost Trend & 30-Day Forecast</h2>
             <div className="flex gap-4 text-xs text-textSecondary font-medium">
               <span className="flex items-center gap-1.5">
-                <span className="w-3 h-1 rounded-sm bg-[#3b82f6] inline-block"></span> Actual Spend
+                <span className="w-3 h-1 rounded-sm bg-[#38bdf8] inline-block"></span> Actual Spend
               </span>
               <span className="flex items-center gap-1.5">
-                <span className="w-3 h-1 rounded-sm border-t-2 border-dashed border-[#8b5cf6] inline-block"></span> AI Forecast
+                <span className="w-3 h-1 rounded-sm border-t-2 border-dashed border-[#ec4899] inline-block"></span> AI Forecast
               </span>
             </div>
           </div>
@@ -110,7 +110,7 @@ const Dashboard = ({
         <div className="bg-bgCard border border-borderColor rounded-2xl p-6 flex flex-col gap-5 shadow-main backdrop-blur-md max-h-[380px] overflow-hidden">
           <div className="flex justify-between items-center">
             <h2 className="text-[17px] font-semibold text-textPrimary">Cost Optimizations</h2>
-            <span className="px-2 py-0.5 bg-[rgba(124,58,237,0.15)] text-[#c084fc] border border-[rgba(168,85,247,0.2)] rounded-[6px] text-xs font-bold">
+            <span className="px-2 py-0.5 bg-[rgba(56,189,248,0.12)] text-[#38bdf8] border border-[rgba(56,189,248,0.25)] rounded-[6px] text-xs font-bold">
               {activeRecs.length} Active
             </span>
           </div>
@@ -139,7 +139,7 @@ const Dashboard = ({
           <h2 className="text-[17px] font-semibold text-textPrimary">Monitored Cloud Resources</h2>
           <button
             onClick={() => navigate('/resources')}
-            className="text-xs font-semibold text-[#a78bfa] hover:text-[#c084fc] hover:underline cursor-pointer transition-colors duration-200"
+            className="text-xs font-semibold text-[#38bdf8] hover:text-[#ec4899] hover:underline cursor-pointer transition-colors duration-200"
           >
             View Detailed Resource Directory &rarr;
           </button>

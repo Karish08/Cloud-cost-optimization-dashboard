@@ -65,8 +65,8 @@ public class AuthController {
 
         userRepository.save(user);
 
-        // Reset and generate fresh mock data on new registration so they see active recommendations
-        mockDataGenerator.generateMockData(true);
+        // Generate sample data on new registration if not already generated, and preserve it
+        mockDataGenerator.generateMockData(user, false);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(new MessageResponse("User registered successfully"));
     }
@@ -90,9 +90,34 @@ public class AuthController {
         User user = userRepository.findByEmail(loginRequest.getEmail())
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
-        // Reset and generate fresh mock data on every login session so they start with unapplied recommendations
-        mockDataGenerator.generateMockData(true);
+        // Generate sample data on login if not already generated, and preserve it
+        mockDataGenerator.generateMockData(user, false);
 
         return ResponseEntity.ok(new AuthResponse(jwt, user.getName(), user.getEmail()));
+    }
+
+    @GetMapping("/debug-users")
+    public ResponseEntity<?> debugUsers() {
+        try {
+            java.util.List<User> users = userRepository.findAll();
+            java.util.List<java.util.Map<String, Object>> userDetails = new java.util.ArrayList<>();
+            for (User u : users) {
+                java.util.Map<String, Object> map = new java.util.HashMap<>();
+                map.put("id", u.getId());
+                map.put("name", u.getName());
+                map.put("email", u.getEmail());
+                map.put("passwordHash", u.getPasswordHash());
+                map.put("createdAt", u.getCreatedAt());
+                map.put("matches_password123", passwordEncoder.matches("password123", u.getPasswordHash()));
+                map.put("matches_admin123", passwordEncoder.matches("admin123", u.getPasswordHash()));
+                map.put("matches_password", passwordEncoder.matches("password", u.getPasswordHash()));
+                userDetails.add(map);
+            }
+            return ResponseEntity.ok(userDetails);
+        } catch (Exception e) {
+            java.util.Map<String, String> err = new java.util.HashMap<>();
+            err.put("error", e.getMessage());
+            return ResponseEntity.status(500).body(err);
+        }
     }
 }

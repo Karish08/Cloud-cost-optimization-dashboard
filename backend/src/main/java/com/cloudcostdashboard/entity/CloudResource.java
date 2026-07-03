@@ -34,4 +34,8 @@ public class CloudResource {
 
     @Column(name = "cost_per_day", nullable = false)
     private double costPerDay;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 }

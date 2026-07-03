@@ -28,10 +28,13 @@ api.interceptors.response.use(
   },
   (error) => {
     if (error.response && (error.response.status === 401 || error.response.status === 403)) {
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-      // Redirect to login page on session expiry/unauthorized request
-      window.location.href = '/login';
+      const url = error.config?.url || '';
+      if (!url.includes('/auth/login') && !url.includes('/auth/register')) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        // Redirect to login page on session expiry/unauthorized request
+        window.location.href = '/login';
+      }
     }
     return Promise.reject(error);
   }
