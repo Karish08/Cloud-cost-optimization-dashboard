@@ -61,7 +61,8 @@ public class CostController {
         LocalDate start = end.minusDays(29);
         List<CostRecord> records = costRecordRepository.findByDateBetweenOrderByDateAsc(start, end);
         double totalSpent30Days = records.stream()
-                .mapToDouble(CostRecord::getCostAmount)
+                .filter(record -> record != null)
+                .mapToDouble(record -> record.getCostAmount())
                 .sum();
 
         // Calculate Monthly Run Rate (sum of costPerDay * 30 for all resources)
@@ -73,8 +74,8 @@ public class CostController {
         // Calculate Potential Monthly Savings (sum of estimatedSavingsPerMonth for unapplied recommendations)
         List<Recommendation> recommendations = recommendationRepository.findAll();
         double potentialSavings = recommendations.stream()
-                .filter(rec -> !rec.isApplied())
-                .mapToDouble(Recommendation::getEstimatedSavingsPerMonth)
+                .filter(rec -> rec != null && !rec.isApplied())
+                .mapToDouble(rec -> rec.getEstimatedSavingsPerMonth())
                 .sum();
 
         // Round off to 2 decimal places

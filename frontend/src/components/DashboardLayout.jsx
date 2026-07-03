@@ -10,7 +10,7 @@ const DashboardLayout = ({ onRefresh, viewTitle, notification, showToast }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [syncing, setSyncing] = useState(false);
-  const { notifications, unreadCount, animateBell, markAsRead, markAllAsRead } = useNotifications();
+  const { notifications, unreadCount, animateBell, markAsRead, markAllAsRead, refreshNotifications } = useNotifications();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
 
@@ -97,6 +97,7 @@ const DashboardLayout = ({ onRefresh, viewTitle, notification, showToast }) => {
     try {
       await api.post('/costs/sync');
       await onRefresh();
+      refreshNotifications();
       showToast("Multi-cloud synchronization finished successfully.", "success");
     } catch (error) {
       showToast("Failed to sync cloud costs: " + (error.response?.data?.message || error.message), "danger");

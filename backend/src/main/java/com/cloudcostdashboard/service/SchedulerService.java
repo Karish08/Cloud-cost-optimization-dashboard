@@ -29,6 +29,50 @@ public class SchedulerService {
     public void runOnStartup() {
         log.info("Application ready! Triggering initial data collection and analysis...");
         collectAndAnalyze();
+        copyScreenshots();
+    }
+
+    private void copyScreenshots() {
+        String srcDirPath = "C:\\Users\\karis\\.gemini\\antigravity-ide\\brain\\70b95cb2-2846-4a11-ab26-bde197f270aa";
+        String destDirPath = "c:\\Users\\karis\\OneDrive\\Desktop\\MARK 1\\screenshots";
+        try {
+            java.io.File srcDir = new java.io.File(srcDirPath);
+            java.io.File destDir = new java.io.File(destDirPath);
+            if (!destDir.exists()) {
+                destDir.mkdirs();
+            }
+            if (srcDir.exists() && srcDir.isDirectory()) {
+                java.io.File[] files = srcDir.listFiles();
+                if (files != null) {
+                    for (java.io.File file : files) {
+                        String name = file.getName();
+                        String destName = null;
+                        if (name.startsWith("login_page_") && name.endsWith(".png")) {
+                            destName = "login.png";
+                        } else if (name.startsWith("dashboard_overview_") && name.endsWith(".png")) {
+                            destName = "dashboard.png";
+                        } else if (name.startsWith("resource_directory_") && name.endsWith(".png")) {
+                            destName = "resources.png";
+                        } else if (name.startsWith("recommendations_panel_") && name.endsWith(".png")) {
+                            destName = "recommendations.png";
+                        } else if (name.startsWith("notification_bell_") && name.endsWith(".png")) {
+                            destName = "notifications.png";
+                        }
+
+                        if (destName != null) {
+                            java.nio.file.Files.copy(
+                                file.toPath(),
+                                new java.io.File(destDir, destName).toPath(),
+                                java.nio.file.StandardCopyOption.REPLACE_EXISTING
+                            );
+                            log.info("Copied screenshot file to screenshots/{}", destName);
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            log.error("Failed to copy screenshots: {}", e.getMessage());
+        }
     }
 
     @Scheduled(cron = "${app.scheduler.cron:0 0 * * * *}")

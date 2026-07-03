@@ -8,6 +8,7 @@ import Signup from './pages/Signup';
 import Dashboard from './pages/Dashboard';
 import Resources from './pages/Resources';
 import Recommendations from './pages/Recommendations';
+import { useNotifications } from './context/NotificationContext';
 
 // Protected Route Wrapper
 const ProtectedRoute = ({ children }) => {
@@ -31,6 +32,7 @@ const DashboardContainer = () => {
   // Toast notifications state
   const [notification, setNotification] = useState({ message: '', type: 'success' });
   const { isAuthenticated } = useAuth();
+  const { refreshNotifications } = useNotifications();
 
   const showToast = useCallback((message, type = 'success') => {
     setNotification({ message, type });
@@ -79,6 +81,7 @@ const DashboardContainer = () => {
       
       // Reload dashboard data instantly
       await fetchDashboardData();
+      refreshNotifications();
     } catch (error) {
       showToast('Failed to analyze resource: ' + (error.response?.data?.message || error.message), 'danger');
       throw error;
@@ -93,6 +96,7 @@ const DashboardContainer = () => {
       
       // Reload dashboard data instantly
       await fetchDashboardData();
+      refreshNotifications();
     } catch (error) {
       showToast('Failed to apply recommendation: ' + (error.response?.data?.message || error.message), 'danger');
       throw error;

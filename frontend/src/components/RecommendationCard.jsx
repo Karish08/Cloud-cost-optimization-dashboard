@@ -35,12 +35,14 @@ const RecommendationCard = ({ recommendation, onApply }) => {
 
   return (
     <div className="bg-[rgba(255,255,255,0.02)] border border-borderColor rounded-xl p-4 flex flex-col gap-3 transition-all duration-300 hover:bg-[rgba(255,255,255,0.04)] hover:border-[rgba(255,255,255,0.12)]">
-      <div className="flex justify-between items-start">
-        <div className="flex flex-col gap-0.5">
-          <span className="text-sm font-semibold text-textPrimary">{resource?.name}</span>
-          <span className="text-xs text-textSecondary font-mono">{resource?.resourceId}</span>
+      <div className="flex justify-between items-start gap-3 w-full min-w-0">
+        <div className="flex flex-col gap-0.5 min-w-0 flex-1">
+          <span className="text-sm font-semibold text-textPrimary truncate">{resource?.name}</span>
+          <span className="text-xs text-textSecondary font-mono block truncate" title={resource?.resourceId}>
+            {resource?.resourceId}
+          </span>
         </div>
-        <span className={`px-2 py-0.5 rounded-[6px] text-[10px] font-bold tracking-wide uppercase ${getActionBadgeClass(actionType)}`}>
+        <span className={`px-2 py-0.5 rounded-[6px] text-[10px] font-bold tracking-wide uppercase shrink-0 ${getActionBadgeClass(actionType)}`}>
           {formatAction(actionType)}
         </span>
       </div>
