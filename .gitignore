@@ -97,7 +97,10 @@ ehthumbs.db
 # Logs & Temp files
 # ==========================================
 *.log
+*.log*
+*.gz
 logs/
 backend/logs/
+backend/app.log*
 tmp/
 temp/
