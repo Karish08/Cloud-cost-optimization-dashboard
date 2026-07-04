@@ -1,59 +1,125 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { Wallet, TrendingDown, AlertTriangle } from 'lucide-react';
 
 const KpiCard = ({ icon, title, value, subtitle, glowColor, iconBgColor, textColor }) => {
-  const getGlowClass = (color) => {
-    switch (color) {
-      case 'blue':
-        return 'hover:border-[rgba(56,189,248,0.4)] hover:shadow-glow-cyan';
-      case 'pink':
-        return 'hover:border-[rgba(236,72,153,0.4)] hover:shadow-glow-pink';
-      case 'emerald':
-        return 'hover:border-[rgba(16,185,129,0.4)] hover:shadow-[0_8px_32px_rgba(16,185,129,0.15)]';
-      case 'amber':
-        return 'hover:border-[rgba(245,158,11,0.4)] hover:shadow-[0_8px_32px_rgba(245,158,11,0.15)]';
-      default:
-        return 'hover:border-borderHover';
+  const numericString = value ? value.replace(/[^0-9.]/g, '') : '0';
+  const targetNumber = parseFloat(numericString) || 0;
+  const [displayVal, setDisplayVal] = useState(0);
+
+  useEffect(() => {
+    let start = 0;
+    const end = targetNumber;
+    if (start === end) {
+      setDisplayVal(end);
+      return;
+    }
+
+    const duration = 1500; // 1.5 seconds count up
+    const startTime = performance.now();
+
+    const animate = (currentTime) => {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      
+      // easeOutQuad curve
+      const easeProgress = progress * (2 - progress);
+      const currentVal = start + (end - start) * easeProgress;
+      
+      setDisplayVal(currentVal);
+
+      if (progress < 1) {
+        requestAnimationFrame(animate);
+      }
+    };
+
+    requestAnimationFrame(animate);
+  }, [targetNumber]);
+
+  const formatValue = (num) => {
+    if (!value) return '';
+    if (!value.includes('$')) {
+      return Math.round(num).toString();
+    }
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      maximumFractionDigits: 2
+    }).format(num);
+  };
+
+  const getCardStyle = () => {
+    const lowercaseTitle = title.toLowerCase();
+    if (lowercaseTitle.includes('run rate')) {
+      return {
+        bg: 'from-[rgba(99,102,241,0.15)] to-[rgba(99,102,241,0.05)] border-[rgba(99,102,241,0.25)]',
+        circleBg: 'bg-[rgba(99,102,241,0.1)]',
+        iconContainer: 'bg-[rgba(99,102,241,0.2)] text-[#6366f1]',
+        delay: 0,
+        valColor: 'text-white'
+      };
+    } else if (lowercaseTitle.includes('spent')) {
+      return {
+        bg: 'from-[rgba(139,92,246,0.15)] to-[rgba(139,92,246,0.05)] border-[rgba(139,92,246,0.25)]',
+        circleBg: 'bg-[rgba(139,92,246,0.1)]',
+        iconContainer: 'bg-[rgba(139,92,246,0.2)] text-[#8b5cf6]',
+        delay: 100,
+        valColor: 'text-white'
+      };
+    } else {
+      return {
+        bg: 'from-[rgba(16,185,129,0.15)] to-[rgba(16,185,129,0.05)] border-[rgba(16,185,129,0.25)]',
+        circleBg: 'bg-[rgba(16,185,129,0.1)]',
+        iconContainer: 'bg-[rgba(16,185,129,0.2)] text-[#10b981]',
+        delay: 200,
+        valColor: 'text-[#10b981]'
+      };
     }
   };
 
-  const getIconBgClass = (color) => {
-    switch (color) {
-      case 'blue':
-        return 'bg-[rgba(56,189,248,0.12)] text-[#38bdf8] shadow-[0_0_12px_rgba(56,189,248,0.25)] border border-[rgba(56,189,248,0.15)]';
-      case 'pink':
-        return 'bg-[rgba(236,72,153,0.12)] text-[#ec4899] shadow-[0_0_12px_rgba(236,72,153,0.25)] border border-[rgba(236,72,153,0.15)]';
-      case 'emerald':
-        return 'bg-[rgba(16,185,129,0.15)] text-[#34d399] shadow-[0_0_12px_rgba(16,185,129,0.25)] border border-[rgba(16,185,129,0.15)]';
-      case 'amber':
-        return 'bg-[rgba(245,158,11,0.15)] text-[#fbbf24] shadow-[0_0_12px_rgba(245,158,11,0.25)] border border-[rgba(245,158,11,0.15)]';
-      default:
-        return 'bg-gray-800 text-gray-400';
+  const renderIcon = () => {
+    const lowercaseTitle = title.toLowerCase();
+    if (lowercaseTitle.includes('run rate') || lowercaseTitle.includes('spent')) {
+      return <Wallet size={22} />;
+    } else if (lowercaseTitle.includes('savings')) {
+      return <TrendingDown size={22} />;
+    } else {
+      return <AlertTriangle size={22} />;
     }
   };
+
+  const c = getCardStyle();
+  const isLoading = !value || value === '$0.00' || value === '$0';
 
   return (
-    <div className={`glass-panel glass-panel-hover rounded-2xl p-6 flex items-center gap-5 relative overflow-hidden ${getGlowClass(glowColor)}`}>
-      {/* Subtle interior glow */}
-      <div className={`absolute -right-6 -bottom-6 w-24 h-24 rounded-full filter blur-2xl opacity-[0.06] bg-current ${
-        glowColor === 'blue' ? 'text-[#38bdf8]' :
-        glowColor === 'pink' ? 'text-[#ec4899]' :
-        glowColor === 'emerald' ? 'text-[#10b981]' :
-        'text-[#fbbf24]'
-      }`} />
+    <div 
+      className={`bg-gradient-to-br ${c.bg} border rounded-[20px] p-[28px] flex justify-between items-start relative overflow-hidden backdrop-blur-[20px] transition-all duration-200 ease-in-out hover:-translate-y-[3px] hover:shadow-[0_20px_40px_rgba(0,0,0,0.3)]`}
+      style={{
+        animation: 'shimmer 0.5s ease forwards',
+        animationDelay: `${c.delay}ms`,
+        opacity: 0
+      }}
+    >
+      {/* Decorative circle top-right */}
+      <div className={`absolute w-[120px] h-[120px] rounded-full ${c.circleBg} -top-[30px] -right-[30px] pointer-events-none`} />
 
-      <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-2xl relative z-10 ${getIconBgClass(iconBgColor)}`}>
-        {icon}
-      </div>
-      <div className="flex flex-col relative z-10">
-        <h3 className="text-[13px] uppercase tracking-wider text-textSecondary font-semibold">
+      <div className="flex flex-col relative z-10 text-left flex-grow">
+        <h3 className="text-[0.7rem] font-sans font-bold tracking-[0.125em] uppercase text-[#64748b] mb-3">
           {title}
         </h3>
-        <div className={`text-[28px] font-extrabold my-0.5 tracking-tight ${textColor || 'text-textPrimary'}`}>
-          {value}
-        </div>
-        <span className="text-xs text-textSecondary font-medium">
+        {isLoading ? (
+          <div className="h-10 w-36 bg-[rgba(255,255,255,0.06)] rounded-lg animate-pulse my-2"></div>
+        ) : (
+          <div className={`text-[2.4rem] font-display font-extrabold ${c.valColor} leading-none tracking-[-0.03em] my-1`}>
+            {formatValue(displayVal)}
+          </div>
+        )}
+        <span className="text-[0.78rem] text-[#475569] font-medium mt-2 font-sans">
           {subtitle}
         </span>
+      </div>
+
+      <div className={`w-12 h-12 rounded-xl flex items-center justify-center relative z-10 flex-shrink-0 mt-0.5 ${c.iconContainer}`}>
+        {renderIcon()}
       </div>
     </div>
   );

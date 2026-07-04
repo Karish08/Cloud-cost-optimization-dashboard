@@ -11,15 +11,13 @@ import {
 
 const CustomTooltip = ({ active, payload }) => {
   if (active && payload && payload.length) {
-    // Find the active payload item
     const activeItem = payload.find(p => p.value !== null && p.value !== undefined);
     if (!activeItem) return null;
 
     const data = activeItem.payload;
     const isActual = data.actualSpend !== null;
     const value = isActual ? data.actualSpend : data.forecastSpend;
-    const labelType = isActual ? 'Actual Cost' : 'Predicted Cost';
-    const color = isActual ? '#38bdf8' : '#ec4899';
+    const labelType = isActual ? 'Actual Spend' : 'Forecast';
     
     const formattedDate = new Date(data.date).toLocaleDateString('en-US', {
       weekday: 'short',
@@ -29,9 +27,9 @@ const CustomTooltip = ({ active, payload }) => {
     });
 
     return (
-      <div className="bg-[#0c0c0d] border border-[#38bdf8] rounded-lg p-3 shadow-[0_4px_12px_rgba(0,0,0,0.5)] text-xs pointer-events-none backdrop-blur-md">
-        <div className="text-textSecondary mb-0.5">{formattedDate}</div>
-        <div className="font-bold text-sm" style={{ color }}>
+      <div className="bg-[#1e293b] border border-[rgba(99,102,241,0.3)] rounded-[10px] py-3 px-4 shadow-[0_10px_30px_rgba(0,0,0,0.5)] text-xs pointer-events-none text-[#94a3b8] font-sans">
+        <div className="text-white font-semibold mb-1">{formattedDate}</div>
+        <div className="font-bold text-sm text-[#6366f1]">
           {labelType}: ${value.toFixed(2)}
         </div>
       </div>
@@ -43,7 +41,7 @@ const CustomTooltip = ({ active, payload }) => {
 const SpendForecastChart = ({ data }) => {
   if (!data || data.length === 0) {
     return (
-      <div className="flex items-center justify-center h-[280px] text-textMuted text-sm">
+      <div className="flex items-center justify-center h-[280px] text-textMuted text-sm font-sans">
         No forecast data available
       </div>
     );
@@ -71,35 +69,35 @@ const SpendForecastChart = ({ data }) => {
         >
           <defs>
             <linearGradient id="grad-actual-area" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#38bdf8" stopOpacity={0.4} />
-              <stop offset="100%" stopColor="#38bdf8" stopOpacity={0.0} />
+              <stop offset="0%" stopColor="#6366f1" stopOpacity={0.25} />
+              <stop offset="100%" stopColor="#6366f1" stopOpacity={0.0} />
             </linearGradient>
             <linearGradient id="grad-forecast-area" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#ec4899" stopOpacity={0.3} />
-              <stop offset="100%" stopColor="#ec4899" stopOpacity={0.0} />
+              <stop offset="0%" stopColor="#8b5cf6" stopOpacity={0.15} />
+              <stop offset="100%" stopColor="#8b5cf6" stopOpacity={0.0} />
             </linearGradient>
           </defs>
 
           <CartesianGrid
             strokeDasharray="0"
             vertical={false}
-            stroke="rgba(255, 255, 255, 0.03)"
+            stroke="rgba(255, 255, 255, 0.04)"
           />
 
           <XAxis
             dataKey="date"
             tickFormatter={formatXAxis}
-            stroke="rgba(255, 255, 255, 0.2)"
-            tick={{ fill: '#575c75', fontSize: 10 }}
-            axisLine={{ stroke: 'rgba(255, 255, 255, 0.08)' }}
+            stroke="rgba(255, 255, 255, 0.04)"
+            tick={{ fill: '#475569', fontSize: 11, fontFamily: 'Inter' }}
+            axisLine={{ stroke: 'rgba(255, 255, 255, 0.04)' }}
             tickLine={false}
           />
 
           <YAxis
             tickFormatter={formatYAxis}
-            stroke="rgba(255, 255, 255, 0.2)"
-            tick={{ fill: '#575c75', fontSize: 10 }}
-            axisLine={{ stroke: 'rgba(255, 255, 255, 0.08)' }}
+            stroke="rgba(255, 255, 255, 0.04)"
+            tick={{ fill: '#475569', fontSize: 11, fontFamily: 'Inter' }}
+            axisLine={{ stroke: 'rgba(255, 255, 255, 0.04)' }}
             tickLine={false}
           />
 
@@ -109,25 +107,25 @@ const SpendForecastChart = ({ data }) => {
           <Area
             type="monotone"
             dataKey="actualSpend"
-            stroke="#38bdf8"
-            strokeWidth={3}
+            stroke="#6366f1"
+            strokeWidth={2.5}
             fill="url(#grad-actual-area)"
-            connectNulls={false}
+            connectNulls={true}
             dot={false}
-            activeDot={{ r: 6, stroke: '#38bdf8', strokeWidth: 3, fill: '#050506' }}
+            activeDot={{ r: 6, stroke: '#6366f1', strokeWidth: 3, fill: '#0a0f1e' }}
           />
 
           {/* Area for Forecast Spend */}
           <Area
             type="monotone"
             dataKey="forecastSpend"
-            stroke="#ec4899"
-            strokeWidth={3}
-            strokeDasharray="4 4"
+            stroke="#8b5cf6"
+            strokeWidth={2}
+            strokeDasharray="6 3"
             fill="url(#grad-forecast-area)"
-            connectNulls={false}
+            connectNulls={true}
             dot={false}
-            activeDot={{ r: 6, stroke: '#ec4899', strokeWidth: 3, fill: '#050506' }}
+            activeDot={{ r: 6, stroke: '#8b5cf6', strokeWidth: 3, fill: '#0a0f1e' }}
           />
         </AreaChart>
       </ResponsiveContainer>

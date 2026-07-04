@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Outlet, useNavigate, useLocation, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Bell, AlertCircle, AlertTriangle, Info, CheckCircle2 } from 'lucide-react';
+import { Bell, AlertCircle, AlertTriangle, Info, CheckCircle2, LayoutDashboard, Server, Lightbulb, LogOut, RefreshCw, Cloud } from 'lucide-react';
 import { useNotifications } from '../context/NotificationContext';
 import api from '../services/api';
+
 
 const DashboardLayout = ({ onRefresh, viewTitle, notification, showToast }) => {
   const { user, logout } = useAuth();
@@ -75,20 +76,21 @@ const DashboardLayout = ({ onRefresh, viewTitle, notification, showToast }) => {
   const getProviderBadgeClass = (provider) => {
     switch (provider?.toUpperCase()) {
       case 'AWS':
-        return 'bg-[rgba(255,153,0,0.15)] text-[#ff9900] border border-[rgba(255,153,0,0.25)]';
+        return 'bg-amber-500/10 text-amber-400 border border-amber-500/20';
       case 'AZURE':
-        return 'bg-[rgba(0,137,214,0.15)] text-[#0089d6] border border-[rgba(0,137,214,0.25)]';
+        return 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/20';
       case 'GCP':
-        return 'bg-[rgba(66,133,244,0.15)] text-[#4285f4] border border-[rgba(66,133,244,0.25)]';
+        return 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20';
       default:
         return 'bg-gray-800 text-gray-400 border border-gray-700';
     }
   };
 
   const getActiveMenuClass = (path) => {
+    const baseClass = 'flex items-center gap-3 py-3 px-4 rounded-[10px] text-[0.9rem] transition-all duration-150 w-full border-l-[3px] ';
     return location.pathname === path
-      ? 'bg-[rgba(255,255,255,0.06)] border border-[rgba(255,255,255,0.08)] text-textPrimary font-semibold shadow-inner'
-      : 'text-textSecondary hover:text-textPrimary hover:bg-[rgba(255,255,255,0.03)] border border-transparent';
+      ? baseClass + 'bg-[rgba(99,102,241,0.15)] border-[#6366f1] text-[#6366f1] font-semibold shadow-[inset_0_0_20px_rgba(99,102,241,0.05)]'
+      : baseClass + 'text-[#94a3b8] font-medium hover:text-white hover:bg-[rgba(255,255,255,0.05)] border-transparent';
   };
 
   const handleSyncClick = async () => {
@@ -114,176 +116,222 @@ const DashboardLayout = ({ onRefresh, viewTitle, notification, showToast }) => {
   const userInitials = (user?.name || 'U').charAt(0).toUpperCase();
 
   return (
-    <div className="flex flex-col w-screen h-screen overflow-hidden bg-bgDark text-textPrimary relative">
-      {/* Ambient Moving Light Blobs for Depth Parallax */}
-      <div className="absolute top-[-50px] left-[5%] w-[450px] h-[450px] rounded-full bg-[rgba(56,189,248,0.08)] filter blur-[110px] pointer-events-none z-0 animate-float-slow-1"></div>
-      <div className="absolute bottom-[-100px] right-[5%] w-[500px] h-[500px] rounded-full bg-[rgba(236,72,153,0.06)] filter blur-[120px] pointer-events-none z-0 animate-float-slow-2"></div>
-      <div className="absolute top-[40%] left-[30%] w-[350px] h-[350px] rounded-full bg-[rgba(56,189,248,0.03)] filter blur-[90px] pointer-events-none z-0 animate-float-slow-1"></div>
+    <div className="flex w-screen h-screen overflow-hidden bg-[#0a0f1e] text-textPrimary relative font-sans">
+      {/* Ambient Moving Light Blobs for Depth Space Parallax */}
+      <div className="absolute top-[-80px] right-[10%] w-[500px] h-[500px] rounded-full bg-[rgba(99,102,241,0.07)] filter blur-[100px] pointer-events-none z-0 animate-float-slow-1"></div>
+      <div className="absolute bottom-[-120px] left-[15%] w-[550px] h-[550px] rounded-full bg-[rgba(139,92,246,0.06)] filter blur-[120px] pointer-events-none z-0 animate-float-slow-2"></div>
 
-      {/* Top Navbar */}
-      <header className="w-full bg-[rgba(5,5,6,0.6)] backdrop-blur-md border-b border-borderColor py-4 px-8 flex items-center justify-between z-[1000] sticky top-0 flex-shrink-0 relative">
-        <div className="flex items-center gap-8">
-          {/* Logo */}
-          <div className="flex items-center gap-3">
-            <span className="text-2xl">☁️</span>
-            <span className="font-extrabold text-xl bg-grad-cosmic bg-clip-text text-transparent tracking-tight">CloudCost</span>
+      {/* Sidebar Navigation */}
+      <aside className="w-64 h-full bg-gradient-to-b from-[#0a0f1e] to-[#0d1528] border-r border-[rgba(99,102,241,0.25)] flex flex-col justify-between z-20 flex-shrink-0 relative animate-sidebar-slide-in">
+        <div className="flex flex-col gap-6 py-6 px-4">
+          {/* Glowing Brand Area */}
+          {/* Glowing Brand Area */}
+          <div className="flex items-center gap-3 px-2 pb-6 mb-2 border-b border-[rgba(255,255,255,0.06)] font-display text-[1.3rem]">
+            <Cloud size={22} className="text-[#6366f1] shrink-0 animate-pulse" />
+            <span className="font-extrabold text-white tracking-tight">
+              Cloud<span className="text-[#6366f1] font-extrabold">Cost</span>
+            </span>
           </div>
 
-          {/* Navigation links */}
-          <nav className="flex items-center gap-1.5">
-            <Link to="/" className={`py-1.5 px-4 rounded-full text-[13px] transition-all duration-300 ${getActiveMenuClass('/')}`}>
-              Overview
+          {/* Navigation Links */}
+          <nav className="flex flex-col gap-1.5">
+            <Link to="/" className={getActiveMenuClass('/')}>
+              <LayoutDashboard size={18} />
+              <span>Overview</span>
             </Link>
-            <Link to="/resources" className={`py-1.5 px-4 rounded-full text-[13px] transition-all duration-300 ${getActiveMenuClass('/resources')}`}>
-              Resources
+            <Link to="/resources" className={getActiveMenuClass('/resources')}>
+              <Server size={18} />
+              <span>Resources</span>
             </Link>
-            <Link to="/recommendations" className={`py-1.5 px-4 rounded-full text-[13px] transition-all duration-300 ${getActiveMenuClass('/recommendations')}`}>
-              Recommendations
+            <Link to="/recommendations" className={getActiveMenuClass('/recommendations')}>
+              <Lightbulb size={18} />
+              <span>Recommendations</span>
             </Link>
           </nav>
         </div>
 
-        {/* Action controls & profile info */}
-        <div className="flex items-center gap-4">
-          <button
-            onClick={handleSyncClick}
-            disabled={syncing}
-            className="bg-[rgba(56,189,248,0.06)] text-[#38bdf8] border border-[rgba(56,189,248,0.25)] hover:bg-[rgba(56,189,248,0.12)] hover:shadow-glow-cyan font-semibold py-1.5 px-4 rounded-full flex items-center gap-2 transition-all duration-300 disabled:opacity-50 text-xs cursor-pointer"
-          >
-            <span>🔄</span> {syncing ? 'Syncing...' : 'Sync Multi-Cloud'}
-          </button>
-
-          {/* Notification Bell and Dropdown */}
-          <div className="relative flex items-center" ref={dropdownRef}>
-            <button
-              onClick={() => setDropdownOpen(!dropdownOpen)}
-              className={`p-2 rounded-full border border-borderColor bg-[rgba(255,255,255,0.02)] text-textPrimary hover:bg-[rgba(255,255,255,0.06)] hover:border-borderHover transition-all duration-300 relative flex items-center justify-center cursor-pointer ${
-                bellShake ? 'animate-bell-shake' : ''
-              }`}
-            >
-              <Bell size={16} />
-              {unreadCount > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-[#ec4899] text-white text-[9px] font-bold rounded-full flex items-center justify-center animate-pulse border border-[#050506]">
-                  {unreadCount}
-                </span>
-              )}
-            </button>
-
-            {dropdownOpen && (
-              <div className="absolute right-0 mt-3 top-[36px] w-[320px] sm:w-[380px] bg-bgCard border border-borderColor rounded-2xl shadow-premium-3d backdrop-blur-md z-[1000] flex flex-col max-h-[400px] overflow-hidden">
-                {/* Dropdown Header */}
-                <div className="flex justify-between items-center px-4 py-3 border-b border-borderColor">
-                  <span className="font-bold text-textPrimary text-xs">Notifications</span>
-                  {unreadCount > 0 && (
-                    <button
-                      onClick={handleMarkAllAsRead}
-                      className="text-[11px] text-[#38bdf8] hover:text-[#ec4899] hover:underline font-semibold cursor-pointer"
-                    >
-                      Mark all as read
-                    </button>
-                  )}
-                </div>
-
-                {/* Dropdown Body */}
-                <div className="overflow-y-auto flex-grow divide-y divide-borderColor">
-                  {notifications.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center py-8 px-4 text-center gap-2">
-                      <CheckCircle2 size={24} className="text-emeraldColor" />
-                      <div>
-                        <p className="font-semibold text-textPrimary text-xs">All resources are healthy</p>
-                        <p className="text-textSecondary text-[10px] mt-0.5">No alerts detected.</p>
-                      </div>
-                    </div>
-                  ) : (
-                    notifications.map((n) => (
-                      <div
-                        key={n.id}
-                        onClick={() => handleNotificationClick(n)}
-                        className={`p-3 cursor-pointer hover:bg-[rgba(255,255,255,0.03)] transition-colors duration-200 flex gap-3 relative ${
-                          !n.isRead 
-                            ? 'bg-[rgba(255,255,255,0.015)]' 
-                            : ''
-                        }`}
-                        style={{
-                          borderLeft: !n.isRead 
-                            ? `3px solid ${n.type === 'CRITICAL' ? '#ef4444' : n.type === 'WARNING' ? '#f59e0b' : '#38bdf8'}`
-                            : undefined
-                        }}
-                      >
-                        <div className="flex-shrink-0 mt-0.5">
-                          {n.type === 'CRITICAL' && <AlertCircle size={14} className="text-[#ef4444]" />}
-                          {n.type === 'WARNING' && <AlertTriangle size={14} className="text-[#f59e0b]" />}
-                          {n.type === 'INFO' && <Info size={14} className="text-[#38bdf8]" />}
-                        </div>
-                        
-                        <div className="flex-grow flex flex-col gap-1">
-                          <p className="text-xs text-textPrimary leading-normal pr-1">{n.message}</p>
-                          <div className="flex justify-between items-center">
-                            <div className="flex items-center gap-1.5">
-                              <span className={`px-1.5 py-0.5 rounded-[4px] text-[8px] font-bold ${getProviderBadgeClass(n.provider)}`}>
-                                {n.provider}
-                              </span>
-                              {n.estimatedSavings > 0 && (
-                                <span className="text-[9px] font-bold text-[#10b981]">
-                                  Save ${n.estimatedSavings.toFixed(2)}/mo
-                                </span>
-                              )}
-                            </div>
-                            <span className="text-[8px] text-textMuted font-medium font-sans">
-                              {formatRelativeTime(n.createdAt)}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    ))
-                  )}
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* User profile capsule info */}
-          <div className="flex items-center gap-2.5 bg-[rgba(255,255,255,0.03)] border border-borderColor py-1 pl-2 pr-3.5 rounded-full max-w-[200px]">
-            <div className="w-6 h-6 rounded-full bg-grad-primary flex items-center justify-center font-bold text-white text-[10px] flex-shrink-0">
+        {/* Sidebar Footer (Profile Info & Logout) */}
+        <div className="p-4 border-t border-borderColor flex flex-col gap-3 bg-[rgba(13,21,40,0.55)]">
+          <div className="flex items-center gap-3 bg-[rgba(255,255,255,0.02)] border border-borderColor py-2 px-3 rounded-xl">
+            <div className="w-8 h-8 rounded-full bg-gradient-to-r from-[#6366f1] to-[#8b5cf6] flex items-center justify-center font-bold text-white text-[0.9rem] flex-shrink-0 shadow-[0_0_10px_rgba(99,102,241,0.4)] font-display">
               {userInitials}
             </div>
             <div className="flex flex-col overflow-hidden text-left leading-tight">
-              <span className="text-[11px] font-semibold text-textPrimary truncate">{user?.name || 'User'}</span>
+              <span className="text-[0.9rem] font-semibold text-white truncate font-sans">{user?.name || 'User'}</span>
+              <span className="text-[0.75rem] text-[#475569] truncate font-sans">{user?.email || 'Admin'}</span>
             </div>
           </div>
 
           <button
             onClick={handleLogoutClick}
-            className="bg-[rgba(255,255,255,0.04)] text-textSecondary hover:text-textPrimary border border-borderColor hover:bg-[rgba(255,255,255,0.08)] hover:border-borderHover font-semibold py-1 px-3.5 rounded-full transition-all duration-300 text-xs cursor-pointer"
+            className="w-full bg-[rgba(239,68,68,0.1)] border border-[rgba(239,68,68,0.2)] text-[#ef4444] font-semibold py-2 px-4 rounded-[10px] flex items-center justify-center gap-2 transition-all duration-200 text-[0.85rem] cursor-pointer hover:bg-[rgba(239,68,68,0.2)]"
           >
-            Sign Out
+            <LogOut size={14} />
+            <span>Sign Out</span>
           </button>
         </div>
-      </header>
+      </aside>
 
-      {/* Main Content Area */}
-      <main className="flex-grow overflow-y-auto px-8 py-8 flex flex-col gap-6 max-w-[1400px] w-full mx-auto relative z-10">
-        {/* Dynamic Nested Title and Subtitle */}
-        <div className="flex flex-col border-b border-borderColor pb-4">
-          <h1 className="text-2xl font-bold tracking-tight text-textPrimary">{viewTitle}</h1>
-          <p className="text-textSecondary text-xs mt-1">Real-time multicloud billing intelligence and recommendations</p>
-        </div>
-
-        {/* Global Notifications/Toast */}
-        {notification.message && (
-          <div className={`fixed top-5 right-5 z-[9999] px-4 py-3 rounded-lg text-sm border shadow-[0_10px_25px_rgba(0,0,0,0.5)] backdrop-blur-md transition-all duration-300 ${
-            notification.type === 'success' ? 'bg-[rgba(16,185,129,0.1)] text-[#34d399] border-[rgba(16,185,129,0.2)]' :
-            notification.type === 'info' ? 'bg-[rgba(56,189,248,0.1)] text-[#38bdf8] border-[rgba(56,189,248,0.2)]' :
-            notification.type === 'warning' ? 'bg-[rgba(245,158,11,0.1)] text-[#fbbf24] border-[rgba(245,158,11,0.2)]' :
-            'bg-[rgba(239,68,68,0.1)] text-[#f87171] border-[rgba(239,68,68,0.2)]'
-          }`}>
-            {notification.message}
+      {/* Main Content Area Wrapper */}
+      <div className="flex-grow flex flex-col h-full overflow-hidden">
+        {/* Top Header */}
+        <header className="w-full h-16 bg-[rgba(10,15,30,0.45)] backdrop-blur-md border-b border-borderColor px-8 flex items-center justify-between z-10 flex-shrink-0">
+          <div className="flex items-center gap-2 text-[0.8rem] font-medium text-textSecondary font-sans">
+            <span className="text-[#475569]">Dashboard</span>
+            <span className="text-[#334155]">/</span>
+            <span className="text-[#94a3b8]">{viewTitle}</span>
           </div>
-        )}
 
-        {/* Dynamic Nested Routes */}
-        <Outlet />
-      </main>
+          {/* Action controls & Notification Bell */}
+          <div className="flex items-center gap-4">
+            <button
+              onClick={handleSyncClick}
+              disabled={syncing}
+              className="flex items-center gap-1.5 px-4 py-2 rounded-[20px] bg-[rgba(99,102,241,0.1)] text-[#6366f1] border border-[rgba(99,102,241,0.3)] text-[0.8rem] font-semibold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer hover:bg-[rgba(99,102,241,0.2)] font-sans"
+            >
+              <RefreshCw size={14} className={`text-[#6366f1] ${syncing ? 'animate-spin' : ''}`} />
+              <span>{syncing ? 'Syncing...' : 'Sync Multi-Cloud'}</span>
+            </button>
+
+            {/* Notification Bell and Dropdown */}
+            <div className="relative flex items-center" ref={dropdownRef}>
+              <button
+                onClick={() => setDropdownOpen(!dropdownOpen)}
+                className={`p-1.5 rounded-full text-[#94a3b8] hover:text-white transition-all duration-200 relative flex items-center justify-center cursor-pointer ${
+                  bellShake ? 'animate-bell-shake' : ''
+                }`}
+              >
+                <Bell size={18} />
+                {unreadCount > 0 && (
+                  <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] bg-[#6366f1] text-white text-[0.65rem] font-bold rounded-full flex items-center justify-center border border-[#0a0f1e] px-1 font-sans">
+                    {unreadCount}
+                  </span>
+                )}
+              </button>
+
+              {dropdownOpen && (
+                <div className="absolute right-0 mt-3 top-[36px] w-[320px] sm:w-[380px] bg-[rgba(17,24,39,0.7)] border border-borderColor rounded-2xl shadow-premium-3d backdrop-blur-md z-[1000] flex flex-col max-h-[400px] overflow-hidden animate-page-fade-in">
+                  {/* Dropdown Header */}
+                  <div className="flex justify-between items-center px-4 py-3 border-b border-borderColor">
+                    <span className="font-bold text-textPrimary text-xs font-display">Notifications</span>
+                    {unreadCount > 0 && (
+                      <button
+                        onClick={handleMarkAllAsRead}
+                        className="text-[11px] text-[#6366f1] hover:text-[#8b5cf6] hover:underline font-semibold cursor-pointer"
+                      >
+                        Mark all as read
+                      </button>
+                    )}
+                  </div>
+
+                  {/* Dropdown Body */}
+                  <div className="overflow-y-auto flex-grow divide-y divide-borderColor">
+                    {notifications.length === 0 ? (
+                      <div className="flex flex-col items-center justify-center py-8 px-4 text-center gap-2">
+                        <CheckCircle2 size={24} className="text-emeraldColor" />
+                        <div>
+                          <p className="font-semibold text-textPrimary text-xs font-display">All resources are healthy</p>
+                          <p className="text-textSecondary text-[10px] mt-0.5">No alerts detected.</p>
+                        </div>
+                      </div>
+                    ) : (
+                      notifications.map((n) => {
+                        let tintClass = 'hover:bg-[rgba(255,255,255,0.03)] ';
+                        let borderLeftStyle = undefined;
+                        
+                        if (!n.isRead) {
+                          tintClass += 'bg-[rgba(99,102,241,0.04)] ';
+                          if (n.type === 'CRITICAL') {
+                            tintClass += 'bg-red-500/5 ';
+                            borderLeftStyle = '3px solid #ef4444';
+                          } else if (n.type === 'WARNING') {
+                            tintClass += 'bg-amber-500/5 ';
+                            borderLeftStyle = '3px solid #f59e0b';
+                          } else {
+                            borderLeftStyle = '3px solid #6366f1';
+                          }
+                        } else {
+                          tintClass += 'opacity-60 ';
+                          if (n.type === 'CRITICAL') {
+                            borderLeftStyle = '3px solid rgba(239, 68, 68, 0.4)';
+                          } else if (n.type === 'WARNING') {
+                            borderLeftStyle = '3px solid rgba(245, 158, 11, 0.4)';
+                          } else {
+                            borderLeftStyle = '3px solid rgba(99, 102, 241, 0.4)';
+                          }
+                        }
+
+                        return (
+                          <div
+                            key={n.id}
+                            onClick={() => handleNotificationClick(n)}
+                            className={`p-3 cursor-pointer transition-colors duration-200 flex gap-3 relative ${tintClass}`}
+                            style={{ borderLeft: borderLeftStyle }}
+                          >
+                            <div className="flex-shrink-0 mt-0.5">
+                              {n.type === 'CRITICAL' && <AlertCircle size={14} className="text-[#ef4444]" />}
+                              {n.type === 'WARNING' && <AlertTriangle size={14} className="text-[#f59e0b]" />}
+                              {n.type === 'INFO' && <Info size={14} className="text-[#6366f1]" />}
+                            </div>
+                            
+                            <div className="flex-grow flex flex-col gap-1">
+                              <p className="text-xs text-textPrimary leading-normal pr-1">{n.message}</p>
+                              <div className="flex justify-between items-center">
+                                <div className="flex items-center gap-1.5">
+                                  <span className={`px-1.5 py-0.5 rounded-[4px] text-[8px] font-bold ${getProviderBadgeClass(n.provider)}`}>
+                                    {n.provider}
+                                  </span>
+                                  {n.estimatedSavings > 0 && (
+                                    <span className="text-[9px] font-bold text-[#10b981] font-mono">
+                                      Save ${n.estimatedSavings.toFixed(2)}/mo
+                                    </span>
+                                  )}
+                                </div>
+                                <span className="text-[8px] text-textMuted font-medium font-sans">
+                                  {formatRelativeTime(n.createdAt)}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </header>
+
+        {/* Scrollable Page Body */}
+        <main 
+          className="flex-grow overflow-y-auto px-8 py-8 w-full max-w-[1400px] mx-auto relative z-10 animate-page-fade-in"
+          style={{
+            backgroundImage: `radial-gradient(circle at 20% 20%, rgba(99,102,241,0.03) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(139,92,246,0.03) 0%, transparent 50%)`
+          }}
+        >
+          {/* Dynamic Nested Title and Subtitle */}
+          <div className="flex flex-col border-b border-borderColor pb-4 mb-6">
+            <h1 className="text-[2.2rem] font-extrabold tracking-[-0.03em] font-display bg-gradient-to-br from-white to-[#94a3b8] bg-clip-text text-transparent">{viewTitle}</h1>
+            <p className="text-[#64748b] text-[0.9rem] font-normal mt-1.5 font-sans">Real-time multicloud billing intelligence and recommendations</p>
+          </div>
+
+          {/* Global Notifications/Toast */}
+          {notification.message && (
+            <div className={`fixed top-5 right-5 z-[9999] px-4 py-3 rounded-lg text-sm border shadow-[0_10px_25px_rgba(0,0,0,0.5)] backdrop-blur-md transition-all duration-300 ${
+              notification.type === 'success' ? 'bg-[rgba(16,185,129,0.1)] text-[#34d399] border-[rgba(16,185,129,0.2)]' :
+              notification.type === 'info' ? 'bg-[rgba(99,102,241,0.1)] text-[#6366f1] border-[rgba(99,102,241,0.2)]' :
+              notification.type === 'warning' ? 'bg-[rgba(245,158,11,0.1)] text-[#fbbf24] border-[rgba(245,158,11,0.2)]' :
+              'bg-[rgba(239,68,68,0.1)] text-[#f87171] border-[rgba(239,68,68,0.2)]'
+            }`}>
+              {notification.message}
+            </div>
+          )}
+
+          {/* Dynamic Nested Routes */}
+          <Outlet />
+        </main>
+      </div>
     </div>
   );
 };

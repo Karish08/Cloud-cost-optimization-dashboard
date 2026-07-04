@@ -184,7 +184,7 @@ public class RecommendationEngineService {
             results.add(CostForecastDTO.builder()
                     .date(temp.toString())
                     .actualSpend(y[i])
-                    .forecastSpend(null)
+                    .forecastSpend(i == n - 1 ? Math.round(y[i] * 100.0) / 100.0 : null)
                     .build());
             
             temp = temp.plusDays(1);

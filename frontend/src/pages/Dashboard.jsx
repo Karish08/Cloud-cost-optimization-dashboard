@@ -5,6 +5,7 @@ import SpendForecastChart from '../components/SpendForecastChart';
 import ResourceTable from '../components/ResourceTable';
 import RecommendationCard from '../components/RecommendationCard';
 import { useNotifications } from '../context/NotificationContext';
+import { CheckCircle } from 'lucide-react';
 
 const Dashboard = ({
   setViewTitle,
@@ -39,7 +40,7 @@ const Dashboard = ({
   const totalCriticalWaste = criticalAlerts.reduce((sum, item) => sum + item.estimatedSavings, 0);
 
   return (
-    <div className="flex flex-col gap-8 animate-fade-in-up">
+    <div className="flex flex-col gap-6 animate-fade-in-up">
       {showBanner && (
         <div className="bg-red-600 text-white px-6 py-4 rounded-xl flex justify-between items-center font-bold shadow-lg transition-all duration-300">
           <div className="flex items-center gap-1.5 flex-grow">
@@ -60,7 +61,7 @@ const Dashboard = ({
         </div>
       )}
       {/* KPI Section */}
-      <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <section className="grid grid-cols-1 md:grid-cols-3 gap-5">
         <KpiCard
           icon="💸"
           title="Monthly Run Rate"
@@ -91,15 +92,15 @@ const Dashboard = ({
       {/* Spend Forecast Chart and Quick Recommendations panel */}
       <div className="grid grid-cols-1 lg:grid-cols-[1.75fr_1fr] gap-6">
         {/* Cost Trend & Forecast */}
-        <div className="bg-bgCard border border-borderColor rounded-2xl p-6 flex flex-col gap-5 shadow-main backdrop-blur-md">
+        <div className="bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.06)] rounded-[20px] p-[28px] flex flex-col gap-5 shadow-main backdrop-blur-[10px]">
           <div className="flex justify-between items-center">
-            <h2 className="text-[17px] font-semibold text-textPrimary">30-Day Cost Trend & 30-Day Forecast</h2>
-            <div className="flex gap-4 text-xs text-textSecondary font-medium">
+            <h2 className="text-[1.1rem] font-bold text-white font-display">30-Day Cost Trend & 30-Day Forecast</h2>
+            <div className="flex gap-4 text-[0.8rem] text-[#94a3b8] font-medium font-sans">
               <span className="flex items-center gap-1.5">
-                <span className="w-3 h-1 rounded-sm bg-[#38bdf8] inline-block"></span> Actual Spend
+                <span className="w-3.5 h-1 rounded-sm bg-[#6366f1] inline-block"></span> Actual Spend
               </span>
               <span className="flex items-center gap-1.5">
-                <span className="w-3 h-1 rounded-sm border-t-2 border-dashed border-[#ec4899] inline-block"></span> AI Forecast
+                <span className="w-3.5 h-1 rounded-sm border-t-2 border-dashed border-[#8b5cf6] inline-block"></span> Forecast
               </span>
             </div>
           </div>
@@ -107,23 +108,26 @@ const Dashboard = ({
         </div>
 
         {/* Quick Optimizations Panel */}
-        <div className="bg-bgCard border border-borderColor rounded-2xl p-6 flex flex-col gap-5 shadow-main backdrop-blur-md max-h-[380px] overflow-hidden">
+        <div className="bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.06)] rounded-[20px] p-6 flex flex-col gap-5 shadow-main backdrop-blur-[10px] max-h-[380px] overflow-hidden h-full">
           <div className="flex justify-between items-center">
-            <h2 className="text-[17px] font-semibold text-textPrimary">Cost Optimizations</h2>
-            <span className="px-2 py-0.5 bg-[rgba(56,189,248,0.12)] text-[#38bdf8] border border-[rgba(56,189,248,0.25)] rounded-[6px] text-xs font-bold">
+            <h2 className="text-[1.2rem] font-bold text-white font-display">Cost Optimizations</h2>
+            <span className="py-[4px] px-[12px] bg-[rgba(99,102,241,0.15)] text-[#6366f1] border border-[rgba(99,102,241,0.3)] rounded-full text-xs font-bold font-sans">
               {activeRecs.length} Active
             </span>
           </div>
 
           <div className="flex flex-col gap-4 overflow-y-auto pr-1 flex-grow">
             {activeRecs.length === 0 ? (
-              <p className="text-center text-textMuted text-sm py-8">
-                All systems optimized! No active waste detected.
-              </p>
+              <div className="flex flex-col items-center justify-center py-10 px-4 text-center">
+                <CheckCircle className="w-12 h-12 mb-3 text-[#10b981] animate-pulse" />
+                <h3 className="text-[1.1rem] font-bold font-display text-white">All optimizations applied!</h3>
+                <p className="text-sm text-textSecondary font-sans mt-1">Your cloud resources are fully optimized.</p>
+              </div>
             ) : (
-              activeRecs.slice(0, 3).map((rec) => (
+              activeRecs.map((rec, idx) => (
                 <RecommendationCard
                   key={rec.id}
+                  index={idx}
                   recommendation={rec}
                   onApply={onApplyRecommendation}
                 />

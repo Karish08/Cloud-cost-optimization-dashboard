@@ -88,17 +88,38 @@ const DashboardContainer = () => {
     }
   };
 
-  const handleApplyRecommendation = async (recId) => {
-    showToast('Applying recommendation optimization to cloud instances...', 'info');
+  const fetchCostSummary = async () => {
     try {
-      const response = await api.post(`/recommendations/${recId}/apply`);
-      showToast(response.data.message || 'Optimization recommendation applied successfully!', 'success');
+      const res = await api.get('/costs/summary');
+      setCostSummary(res.data);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const fetchRecommendations = async () => {
+    try {
+      const res = await api.get('/recommendations');
+      setRecommendations(res.data);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const handleApplyRecommendation = async (recId) => {
+    try {
+      await api.post(`/recommendations/${recId}/apply`);
       
-      // Reload dashboard data instantly
-      await fetchDashboardData();
+      // Remove that specific card from the list immediately
+      setRecommendations(prev => prev.filter(rec => rec.id !== recId));
+      
+      // Refetch updated summary
+      await fetchCostSummary();
+      
       refreshNotifications();
+      showToast('✓ Recommendation applied. Savings updated.', 'success');
     } catch (error) {
-      showToast('Failed to apply recommendation: ' + (error.response?.data?.message || error.message), 'danger');
+      showToast('Failed to apply recommendation. Please try again.', 'danger');
       throw error;
     }
   };

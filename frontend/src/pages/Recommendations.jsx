@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import RecommendationCard from '../components/RecommendationCard';
+import { CheckCircle } from 'lucide-react';
 
 const Recommendations = ({ setViewTitle, recommendations, onApplyRecommendation }) => {
   useEffect(() => {
@@ -11,16 +12,17 @@ const Recommendations = ({ setViewTitle, recommendations, onApplyRecommendation 
   return (
     <div className="flex flex-col gap-6 animate-fade-in-up">
       {activeRecs.length === 0 ? (
-        <div className="premium-card p-12 text-center">
-          <p className="text-textSecondary text-base">
-            All systems optimized. No active waste detected.
-          </p>
+        <div className="premium-card p-12 flex flex-col items-center justify-center text-center">
+          <CheckCircle className="w-12 h-12 mb-3 text-[#10b981] animate-pulse" />
+          <h3 className="text-lg font-bold font-display text-white">All optimizations applied!</h3>
+          <p className="text-sm text-textSecondary font-sans mt-1">Your cloud resources are fully optimized.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {activeRecs.map((rec) => (
+          {activeRecs.map((rec, idx) => (
             <RecommendationCard
               key={rec.id}
+              index={idx}
               recommendation={rec}
               onApply={onApplyRecommendation}
             />

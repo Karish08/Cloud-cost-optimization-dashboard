@@ -4,15 +4,15 @@ const StatusBadge = ({ status }) => {
   const getBadgeClass = (statusVal) => {
     switch (statusVal) {
       case 'HEALTHY':
-        return 'bg-[rgba(16,185,129,0.12)] text-[#34d399] border border-[rgba(16,185,129,0.2)]';
+        return 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20';
       case 'IDLE':
-        return 'bg-[rgba(59,130,246,0.12)] text-[#60a5fa] border border-[rgba(59,130,246,0.2)]';
+        return 'bg-amber-500/10 text-amber-400 border-amber-500/20';
       case 'OVER_PROVISIONED':
-        return 'bg-[rgba(245,158,11,0.12)] text-[#fbbf24] border border-[rgba(245,158,11,0.2)]';
+        return 'bg-red-500/10 text-red-400 border-red-500/20';
       case 'UNUSED_STORAGE':
-        return 'bg-[rgba(239,68,68,0.12)] text-[#f87171] border border-[rgba(239,68,68,0.2)]';
+        return 'bg-violet-500/10 text-violet-400 border-violet-500/20';
       default:
-        return 'bg-gray-800 text-gray-400 border border-gray-700';
+        return 'bg-gray-800 text-gray-400 border-gray-700';
     }
   };
 
@@ -22,7 +22,7 @@ const StatusBadge = ({ status }) => {
   };
 
   return (
-    <span className={`px-2.5 py-1 rounded-[6px] text-xs font-semibold inline-block ${getBadgeClass(status)}`}>
+    <span className={`inline-block whitespace-nowrap border py-[5px] px-[12px] rounded-[20px] text-[0.75rem] font-bold tracking-[0.05em] uppercase ${getBadgeClass(status)}`}>
       {formatStatus(status)}
     </span>
   );

@@ -35,23 +35,23 @@ const Login = () => {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen p-5 relative overflow-hidden bg-bgDark">
+    <div className="flex justify-center items-center min-h-screen p-5 relative overflow-hidden bg-gradient-to-br from-[#0a0f1e] via-[#0d1528] to-[#0a0f1e]">
       {/* Ambient drifting lights */}
-      <div className="absolute top-[-100px] left-[-50px] w-[350px] h-[350px] rounded-full bg-[rgba(56,189,248,0.06)] filter blur-[100px] pointer-events-none z-0 animate-float-slow-1"></div>
-      <div className="absolute bottom-[-100px] right-[-50px] w-[350px] h-[350px] rounded-full bg-[rgba(236,72,153,0.05)] filter blur-[100px] pointer-events-none z-0 animate-float-slow-2"></div>
+      <div className="absolute top-[-100px] right-[-100px] w-[500px] h-[500px] rounded-full bg-[rgba(99,102,241,0.15)] filter blur-[80px] pointer-events-none z-0 animate-float-slow-1"></div>
+      <div className="absolute bottom-[-100px] left-[-100px] w-[500px] h-[500px] rounded-full bg-[rgba(139,92,246,0.15)] filter blur-[80px] pointer-events-none z-0 animate-float-slow-2"></div>
 
-      <div className="bg-bgCard backdrop-blur-md border border-borderColor shadow-premium-3d rounded-[20px] w-full max-w-[440px] p-10 transition-all duration-300 hover:border-borderHover hover:shadow-glow-cyan relative z-10 animate-fade-in-up">
-        <div className="text-center mb-8">
-          <div className="bg-grad-primary w-14 h-14 rounded-[14px] inline-flex items-center justify-center shadow-[0_4px_20px_rgba(56, 189, 248, 0.4)] mb-4">
+      <div className="bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.08)] backdrop-blur-[24px] shadow-[0_25px_50px_rgba(0,0,0,0.5)] rounded-3xl w-full max-w-[440px] p-10 transition-all duration-300 hover:border-[rgba(99,102,241,0.35)] hover:shadow-[0_0_30px_rgba(99,102,241,0.12)] relative z-10 animate-fade-in-up">
+        <div className="text-center mb-8 flex flex-col items-center justify-center">
+          <div className="bg-gradient-to-r from-[#6366f1] to-[#8b5cf6] w-14 h-14 rounded-[16px] inline-flex items-center justify-center shadow-[0_0_20px_rgba(99,102,241,0.4)] mb-4">
             <span className="text-3xl">☁️</span>
           </div>
-          <h2 className="text-2xl font-bold text-textPrimary">CloudCost.io</h2>
-          <p className="text-textSecondary text-sm mt-1">AI-Powered Cloud Cost Optimization</p>
+          <h2 className="font-display font-extrabold text-3xl bg-gradient-to-br from-white to-[#94a3b8] bg-clip-text text-transparent">CloudCost.io</h2>
+          <p className="text-textSecondary text-sm mt-1 font-sans">AI-Powered Cloud Cost Optimization</p>
         </div>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-5">
           <div className="flex flex-col gap-2">
-            <label htmlFor="login-email" className="text-xs uppercase tracking-wider text-textSecondary font-semibold">
+            <label htmlFor="login-email" className="text-xs uppercase tracking-wider text-textSecondary font-semibold text-left font-sans">
               Email Address
             </label>
             <input
@@ -61,12 +61,12 @@ const Login = () => {
               placeholder="name@company.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="bg-[rgba(255,255,255,0.03)] border border-borderColor text-textPrimary px-4 py-3 rounded-lg outline-none transition-all duration-300 focus:bg-[rgba(255,255,255,0.06)] focus:border-[#38bdf8] focus:shadow-[0_0_0_3px_rgba(56, 189, 248, 0.2)] font-sans text-sm"
+              className="bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] text-textPrimary px-4 py-3 rounded-xl outline-none transition-all duration-200 focus:bg-[rgba(255,255,255,0.08)] focus:border-[rgba(99,102,241,0.6)] focus:ring-[3px] focus:ring-[rgba(99,102,241,0.15)] font-sans text-sm"
             />
           </div>
           
           <div className="flex flex-col gap-2">
-            <label htmlFor="login-password" className="text-xs uppercase tracking-wider text-textSecondary font-semibold">
+            <label htmlFor="login-password" className="text-xs uppercase tracking-wider text-textSecondary font-semibold text-left font-sans">
               Password
             </label>
             <input
@@ -76,21 +76,21 @@ const Login = () => {
               placeholder="••••••••"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="bg-[rgba(255,255,255,0.03)] border border-borderColor text-textPrimary px-4 py-3 rounded-lg outline-none transition-all duration-300 focus:bg-[rgba(255,255,255,0.06)] focus:border-[#38bdf8] focus:shadow-[0_0_0_3px_rgba(56, 189, 248, 0.2)] font-sans text-sm"
+              className="bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] text-textPrimary px-4 py-3 rounded-xl outline-none transition-all duration-200 focus:bg-[rgba(255,255,255,0.08)] focus:border-[rgba(99,102,241,0.6)] focus:ring-[3px] focus:ring-[rgba(99,102,241,0.15)] font-sans text-sm"
             />
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="bg-grad-primary text-white font-semibold py-3 px-6 rounded-lg cursor-pointer transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_4px_15px_rgba(56, 189, 248, 0.4)] active:translate-y-0 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+            className="w-full bg-gradient-to-r from-[#6366f1] to-[#8b5cf6] text-white font-display font-semibold py-3 px-6 rounded-xl cursor-pointer hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(99,102,241,0.45)] active:scale-[1.0] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
           >
             {loading ? 'Signing In...' : 'Sign In'}
           </button>
 
-          <p className="text-sm text-textSecondary text-center mt-2">
+          <p className="text-sm text-textSecondary text-center mt-2 font-sans">
             Don't have an account?{' '}
-            <Link to="/signup" className="text-[#38bdf8] cursor-pointer font-semibold transition-all duration-300 hover:text-[#ec4899] hover:underline">
+            <Link to="/signup" className="text-[#6366f1] cursor-pointer font-semibold transition-all duration-300 hover:text-[#8b5cf6] hover:underline">
               Create an account
             </Link>
           </p>
